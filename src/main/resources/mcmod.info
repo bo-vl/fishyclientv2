@@ -1,0 +1,16 @@
+[
+{
+  "modid": "fishy client v2",
+  "name": "fishy client v2",
+  "description": "its fishy client but v2",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Bo.vl"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

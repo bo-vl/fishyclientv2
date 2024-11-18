@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.7",
+  "package": "mixins",
+  "refmap": "mixins.fish.refmap.json",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+  ],
+  "client": [
+    "FMLHandshake"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
