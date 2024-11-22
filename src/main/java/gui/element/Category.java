@@ -28,10 +28,22 @@ public class Category {
 
         if (expanded) {
             int baseY = y + height + 5;
-            for (int i = 0; i < ModuleManager.getModulesByCategory(name).size(); i++) {
-                Module module = ModuleManager.getModulesByCategory(name).get(i);
-                module.setPosition(x, baseY + (i * 25));
-                module.draw(mouseX, mouseY);
+
+            for (Module module : ModuleManager.getModulesByCategory(name)) {
+                module.setPosition(x, baseY);
+                module.draw(mouseX, mouseY, baseY);
+
+                baseY += module.getHeight();
+
+                if (module.isSettingsExpanded()) {
+                    int settingsOffsetY = baseY;
+                    for (Setting setting : module.getSettings()) {
+                        setting.setPosition(module.getX(), settingsOffsetY);
+                        setting.draw(mouseX, mouseY);
+                        settingsOffsetY += setting.getHeight();
+                    }
+                    baseY = settingsOffsetY;
+                }
             }
         }
     }
