@@ -1,6 +1,5 @@
 package gui.util;
 
-import modules.pelt.AutoWarpBack;
 import gui.element.Module;
 
 import java.util.HashMap;
@@ -10,10 +9,6 @@ import java.util.stream.Collectors;
 
 public class ModuleManager {
     private static Map<String, Module> modules = new HashMap<>();
-
-    static {
-        registerModule(new AutoWarpBack());
-    }
 
     public static void registerModule(Module module) {
         modules.put(module.getName(), module);

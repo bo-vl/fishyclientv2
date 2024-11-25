@@ -11,15 +11,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static main.main.getClickGuiKey;
+
 public class ClickGui extends GuiScreen {
     private List<Category> categories = new ArrayList<>();
 
     public ClickGui() {
         Config.loadConfig();
         categories.add(new Category("Skyblock", 50, 50));
-        categories.add(new Category("Helper", 200, 50));
-        categories.add(new Category("Filler", 350, 50));
-        categories.add(new Category("Filler1", 500, 50));
+        categories.add(new Category("Render", 200, 50));
     }
 
     @Override
@@ -54,8 +54,6 @@ public class ClickGui extends GuiScreen {
             }
         }
     }
-
-
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
@@ -129,7 +127,7 @@ public class ClickGui extends GuiScreen {
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        if (keyCode == Keyboard.KEY_ESCAPE || keyCode == Keyboard.KEY_RSHIFT) {
+        if (keyCode == Keyboard.KEY_ESCAPE || keyCode == getClickGuiKey().getKeyCode()) {
             mc.displayGuiScreen(null);
         }
     }

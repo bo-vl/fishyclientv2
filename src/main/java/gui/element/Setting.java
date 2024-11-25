@@ -5,6 +5,7 @@ import net.minecraft.client.gui.Gui;
 
 public class Setting {
     private String name;
+    private String description;
     private SettingType type;
     private int x, y, width, height;
     private boolean boolValue;
@@ -22,7 +23,12 @@ public class Setting {
     }
 
     public Setting(String name, boolean defaultValue) {
+        this(name, null, defaultValue);
+    }
+
+    public Setting(String name, String description, boolean defaultValue) {
         this.name = name;
+        this.description = description;
         this.type = SettingType.BOOLEAN;
         this.boolValue = defaultValue;
         this.width = 100;
@@ -31,7 +37,12 @@ public class Setting {
     }
 
     public Setting(String name, double minValue, double maxValue, double defaultValue) {
+        this(name, null, minValue, maxValue, defaultValue);
+    }
+
+    public Setting(String name, String description, double minValue, double maxValue, double defaultValue) {
         this.name = name;
+        this.description = description;
         this.type = SettingType.SLIDER;
         this.minValue = minValue;
         this.maxValue = maxValue;
@@ -41,27 +52,62 @@ public class Setting {
         this.id = idCounter++;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public void draw(int mouseX, int mouseY) {
         int backgroundColor = 0x80000000;
         int textColor = 0xFFFFFFFF;
         Gui.drawRect(x, y, x + width, y + height, backgroundColor);
 
+        int fontHeight = Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT;
+        int textWidth = Minecraft.getMinecraft().fontRendererObj.getStringWidth(name);
+
         if (type == SettingType.BOOLEAN) {
-            Minecraft.getMinecraft().fontRendererObj.drawString(name, x + 5, y + 5, textColor);
+            String displayName = name;
+            if (textWidth > width - 50) {
+                displayName = Minecraft.getMinecraft().fontRendererObj.trimStringToWidth(name, width - 50) + "...";
+            }
+
+            Minecraft.getMinecraft().fontRendererObj.drawString(displayName, x + 5, y + 5, textColor);
+
             int boxColor = boolValue ? 0xFF00FF00 : 0xFFFF0000;
             Gui.drawRect(x + width - 25, y + 5, x + width - 5, y + 15, boxColor);
+
+            if ((isHovered(mouseX, mouseY) && textWidth > width - 50) ||
+                    (isHovered(mouseX, mouseY) && description != null)) {
+                String hoverText = description != null ? description : name;
+                Minecraft.getMinecraft().fontRendererObj.drawString(hoverText, x + width + 5, y + 5, textColor);
+            }
         } else if (type == SettingType.SLIDER) {
-            Minecraft.getMinecraft().fontRendererObj.drawString(name, x + 5, y, textColor);
+            String displayName = name;
+            if (textWidth > width - 50) {
+                displayName = Minecraft.getMinecraft().fontRendererObj.trimStringToWidth(name, width - 50) + "...";
+            }
+
+            Minecraft.getMinecraft().fontRendererObj.drawString(displayName, x + 5, y + 5, textColor);
 
             String valueText = String.format("%.2f", sliderValue);
-            Minecraft.getMinecraft().fontRendererObj.drawString(valueText, x + width - 30, y, textColor);
+            Minecraft.getMinecraft().fontRendererObj.drawString(valueText, x + width - 30, y + 5, textColor);
 
             Gui.drawRect(x + 5, y + height - 10, x + width - 5, y + height - 8, 0xFFAAAAAA);
 
             double percentage = (sliderValue - minValue) / (maxValue - minValue);
             int sliderX = x + 5 + (int)((width - 10) * percentage);
-
             Gui.drawRect(sliderX - 2, y + height - 15, sliderX + 2, y + height - 5, 0xFFFFFFFF);
+
+            // If hovering and text was truncated or description exists, draw full name/description
+            if ((isHovered(mouseX, mouseY) && textWidth > width - 50) ||
+                    (isHovered(mouseX, mouseY) && description != null)) {
+                // Prefer description if it exists, otherwise show full name
+                String hoverText = description != null ? description : name;
+                Minecraft.getMinecraft().fontRendererObj.drawString(hoverText, x + width + 5, y + 5, textColor);
+            }
         }
     }
 
@@ -111,5 +157,13 @@ public class Setting {
 
     public int getHeight() {
         return height;
+    }
+
+    public boolean getBoolValue() {
+        return boolValue;
+    }
+
+    public double getSliderValue() {
+        return sliderValue;
     }
 }

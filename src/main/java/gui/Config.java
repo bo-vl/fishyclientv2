@@ -8,8 +8,8 @@ public class Config {
     private static final String CONFIG_FILE = "modules.cfg";
     private static Map<String, Boolean> moduleStates = new HashMap<>();
     private static Map<String, Boolean> categoryStates = new HashMap<>();
-    private static int enabledOutlineColor = 0xFFFF0000; // Default red
-    private static int disabledOutlineColor = 0xFF00FF00; // Default green
+    private static int enabledOutlineColor = 0xFFFF0000;
+    private static int disabledOutlineColor = 0xFF00FF00;
 
     public static void saveModuleState(String moduleName, boolean state) {
         moduleStates.put(moduleName, state);
