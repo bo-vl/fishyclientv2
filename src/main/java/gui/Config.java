@@ -1,5 +1,6 @@
 package gui;
 
+import gui.element.Category;
 import gui.element.Module;
 import gui.element.Setting;
 
@@ -91,6 +92,13 @@ public class Config {
                 }
             });
             properties.forEach((key, value) -> System.out.println(key + ": " + value));
+
+            for (Category category : Category.getAllCategories()) {
+                boolean categoryState = loadCategoryState(category.getName());
+                if (categoryState != category.isExpanded()) {
+                    category.toggleExpansion();
+                }
+            }
 
             for (Module module : Modules.getAllModules()) {
                 boolean moduleState = loadModuleState(module.getName());

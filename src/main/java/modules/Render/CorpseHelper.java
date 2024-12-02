@@ -16,11 +16,13 @@ import java.awt.*;
 public class CorpseHelper extends Modules {
     private static final String Withline = "line";
     private static final String CorpseName = "Corpse name";
+    private static final String TextScale = "Scale";
 
     public CorpseHelper() {
         super("Corpse Helper", "Render");
         Modules.registerSetting(this, new Setting(Withline, "Draws a line to the mob", false));
         Modules.registerSetting(this, new Setting(CorpseName, "Shows Corpse Name", false));
+        Modules.registerSetting(this, new Setting(TextScale, "Text Scale", 1, 1, 5));
     }
 
     @SubscribeEvent
@@ -31,11 +33,12 @@ public class CorpseHelper extends Modules {
                     EntityArmorStand armorStand = (EntityArmorStand) entity;
                     if (armorStand.getEquipmentInSlot(4) != null) {
                         String helmetName = armorStand.getEquipmentInSlot(4).getDisplayName();
-                        if (helmetName.contains(type.getItemName()))
+                        if (helmetName != null && helmetName.contains(type.getItemName())) {
                             if (Modules.getBool("Corpse Helper", CorpseName)) {
-                                RenderUtil.renderFloatingText(type.name(), armorStand, Color.WHITE, 1, 0);
+                                RenderUtil.renderFloatingText(type.name(), armorStand, Color.WHITE, (float) Modules.getSlider("Corpse Helper", TextScale), 0);
                             }
-                        ESPUtil.Esp(armorStand, 2, Color.WHITE, 1f, Modules.getBool("Corpse Helper", Withline), false ,null, false);
+                            ESPUtil.Esp(armorStand, 2, Color.WHITE, 1f, Modules.getBool("Corpse Helper", Withline), false, null, false);
+                        }
                     }
                 }
             }

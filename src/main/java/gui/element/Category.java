@@ -1,14 +1,17 @@
 package gui.element;
 
 import gui.Config;
-import gui.Modules;
 import net.minecraft.client.gui.Gui;
 import utils.Utils;
 import utils.render.RenderUtil;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Category implements Utils {
+    private static List<Category> categories = new ArrayList<>();
+
     private String name;
     private int x, y, width, height;
     private boolean expanded;
@@ -20,6 +23,7 @@ public class Category implements Utils {
         this.width = 100;
         this.height = 20;
         this.expanded = Config.loadCategoryState(name);
+        categories.add(this);
     }
 
     public void draw(int mouseX, int mouseY, Color color, float alpha) {
@@ -40,7 +44,11 @@ public class Category implements Utils {
     }
 
     public void toggleExpansion() {
-        Config.saveCategoryState(name, expanded);
         this.expanded = !this.expanded;
+        Config.saveCategoryState(name, expanded);
+    }
+
+    public static List<Category> getAllCategories() {
+        return new ArrayList<>(categories);
     }
 }
