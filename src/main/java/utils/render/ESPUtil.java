@@ -3,6 +3,7 @@ package utils.render;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import utils.Utils;
 
 import Events.RenderPartialTicks;
@@ -16,6 +17,15 @@ public class ESPUtil implements Utils {
                 MathUtils.interpolate(entity.lastTickPosY, entity.posY, ticks) - mc.getRenderManager().viewerPosY,
                 MathUtils.interpolate(entity.lastTickPosZ, entity.posZ, ticks) - mc.getRenderManager().viewerPosZ
         };
+    }
+
+    public static double[] getInterpolatedBlockPos(BlockPos blockPos, double lastTickX, double lastTickY, double lastTickZ) {
+        float ticks = RenderPartialTicks.getPartialTicks();
+        double x = MathUtils.interpolate(lastTickX, blockPos.getX(), ticks) - mc.getRenderManager().viewerPosX;
+        double y = MathUtils.interpolate(lastTickY, blockPos.getY(), ticks) - mc.getRenderManager().viewerPosY;
+        double z = MathUtils.interpolate(lastTickZ, blockPos.getZ(), ticks) - mc.getRenderManager().viewerPosZ;
+
+        return new double[]{x, y, z};
     }
 
     public static double getDistance(double x, double y, double z) {

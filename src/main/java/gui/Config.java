@@ -39,12 +39,19 @@ public class Config {
     }
 
     public static void loadConfig() {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(CONFIG_FILE))) {
+        File configFile = new File(CONFIG_FILE);
+        if (!configFile.exists()) {
+            System.out.println("Config file not found, loading defaults.");
+            return;
+        }
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(configFile))) {
             moduleStates = (Map<String, Boolean>) ois.readObject();
             categoryStates = (Map<String, Boolean>) ois.readObject();
             enabledOutlineColor = ois.readInt();
             disabledOutlineColor = ois.readInt();
         } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Error loading config: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -56,6 +63,7 @@ public class Config {
             oos.writeInt(enabledOutlineColor);
             oos.writeInt(disabledOutlineColor);
         } catch (IOException e) {
+            System.err.println("Error saving config: " + e.getMessage());
             e.printStackTrace();
         }
     }

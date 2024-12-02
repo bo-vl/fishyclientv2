@@ -1,7 +1,6 @@
 package modules.Render;
 
 import gui.Modules;
-import gui.element.Module;
 import gui.element.Setting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -22,7 +21,7 @@ import java.util.Random;
 public class PeltHelper extends Modules {
     private static final Random random = new Random();
 
-    private static final String AutoWarpback = "Auto Warp back";
+    private static final String AutoWarpback = "Warp back";
     private static final String Withline = "line";
     private static final String warpdelay = "Warp Delay";
 
@@ -41,11 +40,9 @@ public class PeltHelper extends Modules {
                 for (Entity entity : Minecraft.getMinecraft().theWorld.loadedEntityList) {
                     if (entity instanceof EntityArmorStand && entity.getDisplayName().getUnformattedText().toLowerCase().contains(passive.name().toLowerCase()) && entity.getDisplayName().getUnformattedText().toLowerCase().contains(type.name().toLowerCase())) {
                         Entity pelt = new ESPUtil().findMobEntityBelow(Minecraft.getMinecraft(), entity, EntityAnimal.class);
-                        if (pelt != null) {
-                            RenderUtil.renderBB((EntityLivingBase) pelt, Color.WHITE, 0.5f);
-                            if (Modules.getBool("Pelt Helper", Withline)) {
-                                RenderUtil.renderTracer(pelt, 2, Color.WHITE, 0.5f);
-                            }
+                        RenderUtil.renderBB((EntityLivingBase) pelt, Color.WHITE, 0.5f);
+                        if (Modules.getBool("Pelt Helper", Withline)) {
+                            RenderUtil.renderTracer(pelt, 2, Color.WHITE, 0.5f);
                         }
                     }
                 }

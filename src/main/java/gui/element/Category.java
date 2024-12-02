@@ -4,6 +4,7 @@ import gui.Config;
 import gui.Modules;
 import net.minecraft.client.gui.Gui;
 import utils.Utils;
+import utils.render.RenderUtil;
 
 import java.awt.*;
 
@@ -23,7 +24,7 @@ public class Category implements Utils {
 
     public void draw(int mouseX, int mouseY, Color color, float alpha) {
         Gui.drawRect(x, y, x + width, y + height, color.getRGB());
-        mc.fontRendererObj.drawString(name, x + 5, y + 5, Color.white.getRGB());
+        RenderUtil.RenderText(name, x + 5, y + 5, Color.white);
     }
 
     public String getName() {

@@ -1,9 +1,6 @@
 package main;
 
 import gui.ClickGui;
-import gui.Modules;
-import gui.element.Module;
-import modules.Render.PeltHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
@@ -41,6 +38,7 @@ public class main {
     public void Init(FMLInitializationEvent event) {
         proxy.init(event);
         ClientRegistry.registerKeyBinding(CLICK_GUI_KEY);
+        MinecraftForge.EVENT_BUS.register(new RenderUtil());
         MinecraftForge.EVENT_BUS.register(this);
         ModuleInitializer.init();
     }

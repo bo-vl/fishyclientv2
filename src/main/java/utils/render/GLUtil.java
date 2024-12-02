@@ -2,6 +2,7 @@ package utils.render;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraftforge.common.MinecraftForge;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -93,6 +94,39 @@ public class GLUtil {
         glVertex3d(bb.maxX, bb.maxY, bb.maxZ);
         glVertex3d(bb.minX, bb.minY, bb.maxZ);
         glVertex3d(bb.minX, bb.maxY, bb.maxZ);
+
+        glEnd();
+    }
+
+    public static void renderBlockBox(int x, int y, int z) {
+        glBegin(GL_LINES);
+
+        glVertex3d(x, y, z);
+        glVertex3d(x + 1, y, z);
+        glVertex3d(x + 1, y, z);
+        glVertex3d(x + 1, y, z + 1);
+        glVertex3d(x + 1, y, z + 1);
+        glVertex3d(x, y, z + 1);
+        glVertex3d(x, y, z + 1);
+        glVertex3d(x, y, z);
+
+        glVertex3d(x, y + 1, z);
+        glVertex3d(x + 1, y + 1, z);
+        glVertex3d(x + 1, y + 1, z);
+        glVertex3d(x + 1, y + 1, z + 1);
+        glVertex3d(x + 1, y + 1, z + 1);
+        glVertex3d(x, y + 1, z + 1);
+        glVertex3d(x, y + 1, z + 1);
+        glVertex3d(x, y + 1, z);
+
+        glVertex3d(x, y, z);
+        glVertex3d(x, y + 1, z);
+        glVertex3d(x + 1, y, z);
+        glVertex3d(x + 1, y + 1, z);
+        glVertex3d(x + 1, y, z + 1);
+        glVertex3d(x + 1, y + 1, z + 1);
+        glVertex3d(x, y, z + 1);
+        glVertex3d(x, y + 1, z + 1);
 
         glEnd();
     }

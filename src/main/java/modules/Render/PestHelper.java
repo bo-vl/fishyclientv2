@@ -28,11 +28,9 @@ public class PestHelper extends Modules {
             for (Entity entity : Minecraft.getMinecraft().theWorld.loadedEntityList) {
                 if (entity instanceof EntityArmorStand && entity.getDisplayName().getUnformattedText().toLowerCase().contains(type.name().toLowerCase())) {
                     Entity pest = new ESPUtil().findMobEntityBelow(Minecraft.getMinecraft(), entity, EntityArmorStand.class);
-                    if (pest != null) {
-                        RenderUtil.renderBB((EntityLivingBase) pest, Color.WHITE, 0.5f);
-                        if (Modules.getBool("Pest Helper", Withline)) {
-                            RenderUtil.renderTracer(pest, 2, Color.WHITE, 0.5f);
-                        }
+                    RenderUtil.renderBB((EntityLivingBase) pest, Color.WHITE, 0.5f);
+                    if (Modules.getBool("Pest Helper", Withline)) {
+                        RenderUtil.renderTracer(pest, 2, Color.WHITE, 0.5f);
                     }
                 }
             }

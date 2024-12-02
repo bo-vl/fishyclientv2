@@ -5,13 +5,16 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.client.gui.Gui;
 
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import utils.Utils;
 
 import java.awt.*;
 
 import static org.lwjgl.opengl.GL11.*;
+import static utils.render.ESPUtil.getInterpolatedPos;
 import static utils.render.GLUtil.*;
 
 public class RenderUtil implements Utils {
@@ -52,8 +55,8 @@ public class RenderUtil implements Utils {
 
         glColor4f(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, alpha);
 
-        double[] playerPos = ESPUtil.getInterpolatedPos(mc.thePlayer);
-        double[] entityPos = ESPUtil.getInterpolatedPos(entity);
+        double[] playerPos = getInterpolatedPos(mc.thePlayer);
+        double[] entityPos = getInterpolatedPos(entity);
 
         glBegin(GL_LINES);
         glVertex3d(playerPos[0], playerPos[1] + mc.thePlayer.getEyeHeight(), playerPos[2]);
@@ -66,24 +69,11 @@ public class RenderUtil implements Utils {
         GLUtil.enableDepth();
     }
 
+    public static void RenderText(String text, int x, int y, Color color) {
+        mc.fontRendererObj.drawStringWithShadow(text, x, y, color.getRGB());
+    }
 
     public static boolean isHovered(int mouseX, int mouseY, int x, int y, int width, int height) {
         return mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;
     }
-
-    // test
-//    public static void renderAllEntities(Color color, float alpha) {
-//        Minecraft mc = Minecraft.getMinecraft();
-//        for (Entity entity : mc.theWorld.loadedEntityList) {
-//            if (entity instanceof EntityLivingBase) {
-//                renderBB((EntityLivingBase) entity, color, alpha);
-//                renderTracer(entity, 1.5f, color, alpha);
-//            }
-//        }
-//    }
-//
-//    @SubscribeEvent
-//    public void onRenderWorldLast(RenderWorldLastEvent event) {
-//        RenderUtil.renderAllEntities(Color.RED, 1.0f);
-//    }
 }
