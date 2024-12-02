@@ -6,9 +6,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.AxisAlignedBB;
 
-import net.minecraft.util.BlockPos;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import utils.Utils;
 
 import java.awt.*;
@@ -75,5 +72,28 @@ public class RenderUtil implements Utils {
 
     public static boolean isHovered(int mouseX, int mouseY, int x, int y, int width, int height) {
         return mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;
+    }
+
+    public static void renderFloatingText(String text, Entity entity, Color color, float scale, float yOffset) {
+        GlStateManager.pushMatrix();
+        double[] entityPos = getInterpolatedPos(entity);
+        GlStateManager.translate(entityPos[0], entityPos[1] + entity.height + yOffset, entityPos[2]);
+        GlStateManager.rotate(-mc.getRenderManager().playerViewY, 0, 1, 0);
+        GlStateManager.rotate(mc.getRenderManager().playerViewX, 1, 0, 0);
+        GlStateManager.scale(-0.025F * scale, -0.025F * scale, 0.025F * scale);
+        GlStateManager.disableLighting();
+        GlStateManager.depthMask(false);
+        GlStateManager.disableDepth();
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        int width = mc.fontRendererObj.getStringWidth(text) / 2;
+        mc.fontRendererObj.drawStringWithShadow(text, -width, 0, color.getRGB());
+
+        GlStateManager.enableDepth();
+        GlStateManager.depthMask(true);
+        GlStateManager.enableLighting();
+        GlStateManager.disableBlend();
+        GlStateManager.popMatrix();
     }
 }

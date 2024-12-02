@@ -9,7 +9,7 @@ import utils.render.RenderUtil;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import static main.main.getClickGuiKey;
@@ -18,7 +18,6 @@ public class ClickGui extends GuiScreen {
     private List<Category> categoryList = new ArrayList<>();
 
     public ClickGui() {
-        Config.loadConfig();
         categoryList.add(new Category("Skyblock", 50, 50));
         categoryList.add(new Category("Render", 200, 50));
         categoryList.add(new Category("Settings", 350, 50));
@@ -41,14 +40,14 @@ public class ClickGui extends GuiScreen {
                 for (Module module : modules) {
                     module.setPosition(category.getDimensions()[0], moduleY);
                     module.draw(mouseX, mouseY, moduleY, color, alpha);
-                    moduleY += module.getDimensions()[3];
+                    moduleY += module.getDimensions()[3] + 2;
 
                     if (module.SettingsExpanded()) {
                         int settingY = moduleY;
                         for (Setting setting : module.getSettings()) {
                             setting.setPosition(module.getDimensions()[0], settingY);
                             setting.draw(mouseX, mouseY, color, alpha);
-                            settingY += setting.getDimensions()[3];
+                            settingY += setting.getDimensions()[3] + 2;
                         }
                         moduleY = settingY;
                     }
@@ -134,6 +133,7 @@ public class ClickGui extends GuiScreen {
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
         if (keyCode == Keyboard.KEY_ESCAPE || keyCode == getClickGuiKey().getKeyCode()) {
             mc.displayGuiScreen(null);
+            Config.save();
         }
     }
 }

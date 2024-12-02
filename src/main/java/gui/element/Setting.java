@@ -1,5 +1,6 @@
 package gui.element;
 
+import gui.Config;
 import net.minecraft.client.gui.Gui;
 import utils.Utils;
 import utils.render.RenderUtil;
@@ -86,13 +87,15 @@ public class Setting implements Utils {
     }
 
     public void handleMouseClick(int mouseX, int mouseY, int mouseButton) {
-        if (type == type.BOOLEAN && mouseButton == 0) {
+        if (type == SettingsType.BOOLEAN && mouseButton == 0) {
             boolValue = !boolValue;
+            Config.saveToggleValue(name, boolValue);
         }
-        if (type == type.SLIDER) {
+        if (type == SettingsType.SLIDER) {
             if (isSliderHovered(mouseX, mouseY)) {
                 draggingSlider = true;
                 updateSliderValue(mouseX);
+                Config.saveSliderValue(name, (int) sliderValue);
             }
         }
     }
@@ -139,5 +142,17 @@ public class Setting implements Utils {
 
     public int[] getDimensions() {
         return new int[]{x, y, width, height};
+    }
+
+    public void setBoolValue(boolean value) {
+        this.boolValue = value;
+    }
+
+    public void setSliderValue(double value) {
+        this.sliderValue = value;
+    }
+
+    public SettingsType getType() {
+        return type;
     }
 }

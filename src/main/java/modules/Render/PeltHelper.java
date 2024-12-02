@@ -4,16 +4,13 @@ import gui.Modules;
 import gui.element.Setting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityArmorStand;
-import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import utils.lists.Passive;
 import utils.lists.PeltTypes;
 import utils.render.ESPUtil;
-import utils.render.RenderUtil;
 
 import java.awt.*;
 import java.util.Random;
@@ -39,11 +36,7 @@ public class PeltHelper extends Modules {
             for (Passive passive : Passive.values()) {
                 for (Entity entity : Minecraft.getMinecraft().theWorld.loadedEntityList) {
                     if (entity instanceof EntityArmorStand && entity.getDisplayName().getUnformattedText().toLowerCase().contains(passive.name().toLowerCase()) && entity.getDisplayName().getUnformattedText().toLowerCase().contains(type.name().toLowerCase())) {
-                        Entity pelt = new ESPUtil().findMobEntityBelow(Minecraft.getMinecraft(), entity, EntityAnimal.class);
-                        RenderUtil.renderBB((EntityLivingBase) pelt, Color.WHITE, 0.5f);
-                        if (Modules.getBool("Pelt Helper", Withline)) {
-                            RenderUtil.renderTracer(pelt, 2, Color.WHITE, 0.5f);
-                        }
+                        ESPUtil.Esp(entity, 2, Color.WHITE, 0.5f, Modules.getBool("Pelt Helper", Withline), false, null, true);
                     }
                 }
             }

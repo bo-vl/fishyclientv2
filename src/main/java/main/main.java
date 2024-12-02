@@ -1,6 +1,7 @@
 package main;
 
 import gui.ClickGui;
+import gui.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
@@ -15,7 +16,6 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import proxy.CommonProxy;
-import utils.render.RenderUtil;
 
 @Mod(modid = ModInfo.ID, name = ModInfo.NAME, version = ModInfo.VERSION)
 public class main {
@@ -38,9 +38,9 @@ public class main {
     public void Init(FMLInitializationEvent event) {
         proxy.init(event);
         ClientRegistry.registerKeyBinding(CLICK_GUI_KEY);
-        MinecraftForge.EVENT_BUS.register(new RenderUtil());
         MinecraftForge.EVENT_BUS.register(this);
         ModuleInitializer.init();
+        Config.load();
     }
 
     @Mod.EventHandler

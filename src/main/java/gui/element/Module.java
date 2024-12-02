@@ -20,10 +20,9 @@ public class Module implements Utils {
         this.category = category;
         this.width = 100;
         this.height = 20;
-        this.enabled = Config.loadModuleState(name);
     }
 
-    public void draw(int mouseX, int MouseY, int offsetY, Color color, float alpha) {
+    public void draw(int mouseX, int mouseY, int offsetY, Color color, float alpha) {
         this.y = offsetY + 1;
 
         Gui.drawRect(x, y, x + width, y + height, color.getRGB());
@@ -74,7 +73,6 @@ public class Module implements Utils {
     }
 
     public void toggle() {
-        Config.saveModuleState(name, enabled);
         enabled = !enabled;
     }
 }

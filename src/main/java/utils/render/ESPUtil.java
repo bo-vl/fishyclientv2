@@ -2,12 +2,16 @@ package utils.render;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import utils.Utils;
 
 import Events.RenderPartialTicks;
 import utils.misc.MathUtils;
+
+import java.awt.*;
 
 public class ESPUtil implements Utils {
     public static double[] getInterpolatedPos(Entity entity) {
@@ -44,7 +48,7 @@ public class ESPUtil implements Utils {
                 renderingEntityPos[1] + entity.height + (entity.isSneaking() ? -0.3 : 0.18), renderingEntityPos[2] + entityRenderWidth).expand(0.15, 0.15, 0.15);
     }
 
-    public Entity findMobEntityBelow(Minecraft mc, Entity armorStand, Class<? extends Entity> entityClass) {
+    public static Entity findMobEntityBelow(Minecraft mc, Entity armorStand, Class<? extends Entity> entityClass) {
         AxisAlignedBB searchBox = armorStand.getEntityBoundingBox().offset(0, -1, 0).expand(1, 1, 1);
         for (Entity entity : mc.theWorld.loadedEntityList) {
             if (entity != armorStand && entity.getEntityBoundingBox().intersectsWith(searchBox)) {
@@ -54,5 +58,33 @@ public class ESPUtil implements Utils {
             }
         }
         return null;
+    }
+
+    public static void Esp(Entity entity, int width, Color color, float opacity, boolean tracer, boolean WithName, String name, boolean ismob) {
+        if (WithName) {
+            if (!(entity instanceof EntityArmorStand)) {
+                return;
+            }
+
+            String displayName = entity.getDisplayName().getUnformattedText().toLowerCase();
+
+            if (!displayName.contains(name.toLowerCase())) {
+                return;
+            }
+
+            entity = findMobEntityBelow(mc, entity, Entity.class);
+        }
+
+        if (ismob) {
+            entity = findMobEntityBelow(mc, entity, EntityLivingBase.class);
+            if (entity == null) {
+                return;
+            }
+        }
+
+        RenderUtil.renderBB((EntityLivingBase) entity, color, opacity);
+        if (tracer) {
+            RenderUtil.renderTracer(entity, width, color, opacity);
+        }
     }
 }

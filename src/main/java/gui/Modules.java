@@ -8,6 +8,8 @@ import net.minecraftforge.common.MinecraftForge;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static gui.Config.saveModuleState;
+
 public class Modules extends Module {
     private boolean registered = false;
     private static Map<String, Module> modules = new HashMap<>();
@@ -37,13 +39,16 @@ public class Modules extends Module {
         this.enabled = active;
 
         if (active && !registered) {
+            saveModuleState(getName(), true);
             MinecraftForge.EVENT_BUS.register(this);
             registered = true;
         } else if (!active && registered) {
+            saveModuleState(getName(), false);
             MinecraftForge.EVENT_BUS.unregister(this);
             registered = false;
         }
     }
+
 
     @Override
     public void toggle() {
@@ -53,6 +58,10 @@ public class Modules extends Module {
 
     public static Map<String, Module> getModules() {
         return modules;
+    }
+
+    public static List<Module> getAllModules() {
+        return new ArrayList<>(modules.values());
     }
 
     private static Setting getSetting(String moduleName, String settingName) {
