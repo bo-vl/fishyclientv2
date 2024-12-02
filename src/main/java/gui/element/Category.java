@@ -1,11 +1,13 @@
 package gui.element;
 
 import gui.Config;
-import gui.util.ModuleManager;
-import net.minecraft.client.Minecraft;
+import gui.Modules;
 import net.minecraft.client.gui.Gui;
+import utils.Utils;
 
-public class Category {
+import java.awt.*;
+
+public class Category implements Utils {
     private String name;
     private int x, y, width, height;
     private boolean expanded;
@@ -19,57 +21,25 @@ public class Category {
         this.expanded = Config.loadCategoryState(name);
     }
 
-    public void draw(int mouseX, int mouseY) {
-        int backgroundColor = 0x80000000;
-        int textColor = 0xFFFFFFFF;
-
-        Gui.drawRect(x, y, x + width, y + height, backgroundColor);
-        Minecraft.getMinecraft().fontRendererObj.drawString(name, x + 5, y + 5, textColor);
-
-        if (expanded) {
-            int baseY = y + height + 5;
-
-            for (Module module : ModuleManager.getModulesByCategory(name)) {
-                module.setPosition(x, baseY);
-                module.draw(mouseX, mouseY, baseY);
-
-                baseY += module.getHeight();
-
-                if (module.isSettingsExpanded()) {
-                    int settingsOffsetY = baseY;
-                    for (Setting setting : module.getSettings()) {
-                        setting.setPosition(module.getX(), settingsOffsetY);
-                        setting.draw(mouseX, mouseY);
-                        settingsOffsetY += setting.getHeight();
-                    }
-                    baseY = settingsOffsetY;
-                }
-            }
-        }
-    }
-
-    public boolean isHovered(int mouseX, int mouseY) {
-        return mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;
-    }
-
-    public void toggleExpand() {
-        expanded = !expanded;
-        Config.saveCategoryState(name, expanded);
-    }
-
-    public boolean isExpanded() {
-        return expanded;
+    public void draw(int mouseX, int mouseY, Color color, float alpha) {
+        Gui.drawRect(x, y, x + width, y + height, color.getRGB());
+        mc.fontRendererObj.drawString(name, x + 5, y + 5, Color.white.getRGB());
     }
 
     public String getName() {
         return name;
     }
 
-    public int getX() {
-        return x;
+    public boolean isExpanded() {
+        return expanded;
     }
 
-    public int getY() {
-        return y;
+    public int[] getDimensions() {
+        return new int[]{x, y, width, height};
+    }
+
+    public void toggleExpansion() {
+        Config.saveCategoryState(name, expanded);
+        this.expanded = !this.expanded;
     }
 }

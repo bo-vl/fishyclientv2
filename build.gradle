@@ -25,7 +25,7 @@ minecraft {
     runDir = 'run'
     mappings = 'stable_22'
     makeObfSourceJar = false
-    clientRunArgs += ['--mixin', 'mixins.noob.json']
+    clientRunArgs += ['--mixin', 'mixins.fish.json']
 }
 
 repositories {

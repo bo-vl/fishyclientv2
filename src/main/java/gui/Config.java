@@ -1,15 +1,16 @@
 package gui;
 
+import java.awt.*;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Config {
-    private static final String CONFIG_FILE = "modules.cfg";
+    private static final String CONFIG_FILE = "FishClient.cfg";
     private static Map<String, Boolean> moduleStates = new HashMap<>();
     private static Map<String, Boolean> categoryStates = new HashMap<>();
-    private static int enabledOutlineColor = 0xFFFF0000;
-    private static int disabledOutlineColor = 0xFF00FF00;
+    private static int enabledOutlineColor = Color.GREEN.getRGB();
+    private static int disabledOutlineColor = Color.RED.getRGB();
 
     public static void saveModuleState(String moduleName, boolean state) {
         moduleStates.put(moduleName, state);

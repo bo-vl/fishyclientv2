@@ -1,54 +1,56 @@
 package gui;
 
-import gui.element.Setting;
-import net.minecraft.client.gui.GuiScreen;
 import gui.element.Category;
 import gui.element.Module;
-import gui.util.ModuleManager;
+import gui.element.Setting;
+import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
+import utils.render.RenderUtil;
 
+import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 
 import static main.main.getClickGuiKey;
 
 public class ClickGui extends GuiScreen {
-    private List<Category> categories = new ArrayList<>();
+    private List<Category> categoryList = new ArrayList<>();
 
     public ClickGui() {
         Config.loadConfig();
-        categories.add(new Category("Skyblock", 50, 50));
-        categories.add(new Category("Render", 200, 50));
+        categoryList.add(new Category("Skyblock", 50, 50));
+        categoryList.add(new Category("Render", 200, 50));
+        categoryList.add(new Category("Settings", 350, 50));
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        drawDefaultBackground();
+        Color color = Color.black;
+        float alpha = 1.0f;
+        drawCustomScreen(mouseX, mouseY, color, alpha);
+    }
 
-        for (Category category : categories) {
-            category.draw(mouseX, mouseY);
-        }
+    public void drawCustomScreen(int mouseX, int mouseY, Color color, float alpha) {
+        for (Category category : categoryList) {
+            category.draw(mouseX, mouseY, color, alpha);
 
-        for (Category category : categories) {
             if (category.isExpanded()) {
-                List<Module> modules = ModuleManager.getModulesByCategory(category.getName());
-                int baseY = category.getY() + 25;
-
+                List<Module> modules = Modules.getModulesByCategory(category.getName());
+                int moduleY = category.getDimensions()[1] + 25;
                 for (Module module : modules) {
-                    module.setPosition(category.getX(), baseY);
-                    module.draw(mouseX, mouseY, baseY);
+                    module.setPosition(category.getDimensions()[0], moduleY);
+                    module.draw(mouseX, mouseY, moduleY, color, alpha);
+                    moduleY += module.getDimensions()[3];
 
-                    baseY += module.getHeight();
-
-                    if (module.isSettingsExpanded()) {
-                        int settingsOffsetY = baseY;
+                    if (module.SettingsExpanded()) {
+                        int settingY = moduleY;
                         for (Setting setting : module.getSettings()) {
-                            setting.setPosition(module.getX(), settingsOffsetY);
-                            setting.draw(mouseX, mouseY);
-                            settingsOffsetY += setting.getHeight();
+                            setting.setPosition(module.getDimensions()[0], settingY);
+                            setting.draw(mouseX, mouseY, color, alpha);
+                            settingY += setting.getDimensions()[3];
                         }
-                        baseY = settingsOffsetY;
+                        moduleY = settingY;
                     }
                 }
             }
@@ -56,23 +58,24 @@ public class ClickGui extends GuiScreen {
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        for (Category category : categories) {
-            if (category.isHovered(mouseX, mouseY)) {
-                category.toggleExpand();
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+        for (Category category : categoryList) {
+            if (RenderUtil.isHovered(mouseX, mouseY, category.getDimensions()[0], category.getDimensions()[1], category.getDimensions()[2], category.getDimensions()[3])) {
+                category.toggleExpansion();
                 break;
             }
 
             if (category.isExpanded()) {
-                for (Module module : ModuleManager.getModulesByCategory(category.getName())) {
-                    if (module.isHovered(mouseX, mouseY) && mouseButton == 1) {
+                List<Module> modules = Modules.getModulesByCategory(category.getName());
+                for (Module module : modules) {
+                    if (RenderUtil.isHovered(mouseX, mouseY, module.getDimensions()[0], module.getDimensions()[1], module.getDimensions()[2], module.getDimensions()[3]) && mouseButton == 1) {
                         module.toggleSettings();
                         break;
                     }
 
-                    if (module.isSettingsExpanded()) {
+                    if (module.SettingsExpanded()) {
                         for (Setting setting : module.getSettings()) {
-                            if (setting.isHovered(mouseX, mouseY)) {
+                            if (RenderUtil.isHovered(mouseX, mouseY, setting.getDimensions()[0], setting.getDimensions()[1], setting.getDimensions()[2], setting.getDimensions()[3])) {
                                 setting.handleMouseClick(mouseX, mouseY, mouseButton);
                                 break;
                             }
@@ -82,8 +85,8 @@ public class ClickGui extends GuiScreen {
             }
         }
 
-        for (Module module : ModuleManager.getModules().values()) {
-            if (module.isHovered(mouseX, mouseY) && mouseButton == 0) {
+        for (Module module : Modules.getModules().values()) {
+            if (RenderUtil.isHovered(mouseX, mouseY, module.getDimensions()[0], module.getDimensions()[1], module.getDimensions()[2], module.getDimensions()[3]) && mouseButton == 0) {
                 module.toggle();
                 break;
             }
@@ -92,10 +95,11 @@ public class ClickGui extends GuiScreen {
 
     @Override
     protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
-        for (Category category : categories) {
+        for (Category category : categoryList) {
             if (category.isExpanded()) {
-                for (Module module : ModuleManager.getModulesByCategory(category.getName())) {
-                    if (module.isSettingsExpanded()) {
+                List<Module> modules = Modules.getModulesByCategory(category.getName());
+                for (Module module : modules) {
+                    if (module.SettingsExpanded()) {
                         for (Setting setting : module.getSettings()) {
                             setting.handleMouseDrag(mouseX);
                         }
@@ -107,10 +111,11 @@ public class ClickGui extends GuiScreen {
 
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int state) {
-        for (Category category : categories) {
+        for (Category category : categoryList) {
             if (category.isExpanded()) {
-                for (Module module : ModuleManager.getModulesByCategory(category.getName())) {
-                    if (module.isSettingsExpanded()) {
+                List<Module> modules = Modules.getModulesByCategory(category.getName());
+                for (Module module : modules) {
+                    if (module.SettingsExpanded()) {
                         for (Setting setting : module.getSettings()) {
                             setting.handleMouseRelease();
                         }
