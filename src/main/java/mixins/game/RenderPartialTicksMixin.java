@@ -1,4 +1,4 @@
-package mixins.client;
+package mixins.game;
 
 import Events.RenderPartialTicks;
 import net.minecraftforge.common.MinecraftForge;

@@ -5,7 +5,8 @@
   "refmap": "mixins.fish.refmap.json",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "client.RenderPartialTicksMixin"
+    "game.RenderPartialTicksMixin",
+    "game.SpawnParticleMixin"
   ],
   "client": [
     "FMLHandshake"

@@ -97,37 +97,4 @@ public class GLUtil {
 
         glEnd();
     }
-
-    public static void renderBlockBox(int x, int y, int z) {
-        glBegin(GL_LINES);
-
-        glVertex3d(x, y, z);
-        glVertex3d(x + 1, y, z);
-        glVertex3d(x + 1, y, z);
-        glVertex3d(x + 1, y, z + 1);
-        glVertex3d(x + 1, y, z + 1);
-        glVertex3d(x, y, z + 1);
-        glVertex3d(x, y, z + 1);
-        glVertex3d(x, y, z);
-
-        glVertex3d(x, y + 1, z);
-        glVertex3d(x + 1, y + 1, z);
-        glVertex3d(x + 1, y + 1, z);
-        glVertex3d(x + 1, y + 1, z + 1);
-        glVertex3d(x + 1, y + 1, z + 1);
-        glVertex3d(x, y + 1, z + 1);
-        glVertex3d(x, y + 1, z + 1);
-        glVertex3d(x, y + 1, z);
-
-        glVertex3d(x, y, z);
-        glVertex3d(x, y + 1, z);
-        glVertex3d(x + 1, y, z);
-        glVertex3d(x + 1, y + 1, z);
-        glVertex3d(x + 1, y, z + 1);
-        glVertex3d(x + 1, y + 1, z + 1);
-        glVertex3d(x, y, z + 1);
-        glVertex3d(x, y + 1, z + 1);
-
-        glEnd();
-    }
 }

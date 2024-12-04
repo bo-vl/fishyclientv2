@@ -5,7 +5,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 
+import org.lwjgl.opengl.GL11;
 import utils.Utils;
 
 import java.awt.*;
@@ -42,8 +44,6 @@ public class RenderUtil implements Utils {
     public static void renderTracer(Entity entity, float width, Color color, float alpha) {
         if (entity == null || mc.thePlayer == null) return;
 
-        float ticks = RenderPartialTicks.getPartialTicks();
-
         GLUtil.disableDepth();
         GLUtil.setup2DRendering();
 
@@ -62,6 +62,32 @@ public class RenderUtil implements Utils {
         glEnd();
 
         glDisable(GL_LINE_SMOOTH);
+        GLUtil.end2DRendering();
+        GLUtil.enableDepth();
+    }
+
+    public static void RenderBlock(BlockPos pos, Color color, float alpha) {
+        if (pos == null || mc.thePlayer == null) return;
+
+        GLUtil.disableDepth();
+        GLUtil.setup2DRendering();
+
+        glColor4f(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, alpha);
+
+        AxisAlignedBB boundingBox = new AxisAlignedBB(
+                pos.getX(), pos.getY(), pos.getZ(),
+                pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1
+        );
+
+        GlStateManager.pushMatrix();
+        GL11.glTranslated(-mc.getRenderManager().viewerPosX,
+                -mc.getRenderManager().viewerPosY,
+                -mc.getRenderManager().viewerPosZ);
+
+        GLUtil.renderBoundingBox(boundingBox);
+
+        GlStateManager.popMatrix();
+
         GLUtil.end2DRendering();
         GLUtil.enableDepth();
     }
@@ -95,5 +121,27 @@ public class RenderUtil implements Utils {
         GlStateManager.enableLighting();
         GlStateManager.disableBlend();
         GlStateManager.popMatrix();
+    }
+
+    public static void RenderTracerBlock(BlockPos blockPos, float width, Color color, float alpha) {
+        GLUtil.disableDepth();
+        GLUtil.setup2DRendering();
+
+        glEnable(GL_LINE_SMOOTH);
+        glLineWidth(width);
+
+        glColor4f(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, alpha);
+
+        double[] playerPos = getInterpolatedPos(mc.thePlayer);
+
+        glBegin(GL_LINES);
+        glVertex3d(playerPos[0], playerPos[1] + mc.thePlayer.getEyeHeight(), playerPos[2]);
+
+        glVertex3d(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5);
+        glEnd();
+
+        glDisable(GL_LINE_SMOOTH);
+        GLUtil.end2DRendering();
+        GLUtil.enableDepth();
     }
 }

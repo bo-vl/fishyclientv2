@@ -2,6 +2,7 @@ package main;
 
 import gui.Modules;
 import modules.Render.CorpseHelper;
+import modules.Render.EnderNodeHelper;
 import modules.Render.PeltHelper;
 import modules.Render.PestHelper;
 
@@ -10,5 +11,6 @@ public class ModuleInitializer {
         Modules.registerModule(new PeltHelper());
         Modules.registerModule(new PestHelper());
         Modules.registerModule(new CorpseHelper());
+        Modules.registerModule(new EnderNodeHelper());
     }
 }
