@@ -15,13 +15,15 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import utils.render.RenderUtil;
 
 import java.awt.*;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static utils.misc.MathUtils.basicallyEqual;
 
 public class Endernode extends Modules {
-    public static Map<BlockPos, Integer> positions = new HashMap<>();
+    public static Map<BlockPos, Integer> positions = new ConcurrentHashMap<>();
+    private static final int HIGHLIGHT_DURATION = 150;
+    private static final int COOLDOWN_PERIOD = 20;
 
     private static final String Withline = "line";
     public Endernode() {
@@ -31,16 +33,14 @@ public class Endernode extends Modules {
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
+        if (mc.theWorld == null) return;
+
         positions.entrySet().removeIf(entry -> {
             BlockPos pos = entry.getKey();
             int ticks = entry.getValue() - 1;
 
             IBlockState state = mc.theWorld.getBlockState(pos);
-            if (state.getBlock() != Blocks.end_stone && state.getBlock() != Blocks.obsidian) {
-                return true;
-            }
-
-            if (ticks <= 0) {
+            if (state == null || (state.getBlock() != Blocks.end_stone && state.getBlock() != Blocks.obsidian) || ticks <= 0) {
                 return true;
             } else {
                 entry.setValue(ticks);
@@ -60,37 +60,35 @@ public class Endernode extends Modules {
             boolean yZero = basicallyEqual((y - 0.5) % 1, 0, 0.2);
             boolean zZero = basicallyEqual((z - 0.5) % 1, 0, 0.2);
 
-            if (Math.abs(y % 1) == 0.25 && xZero && zZero) {
-                addPositionIfValid(x, y - 1, z);
-                return;
+            if (xZero && zZero) {
+                if (Math.abs(y % 1) == 0.25) {
+                    addPositionIfValid(x, y - 1, z);
+                } else if (Math.abs(y % 1) == 0.75) {
+                    addPositionIfValid(x, y + 1, z);
+                }
             }
-            if (Math.abs(y % 1) == 0.75 && xZero && zZero) {
-                addPositionIfValid(x, y + 1, z);
-                return;
+            if (yZero && zZero) {
+                if (Math.abs(x % 1) == 0.25) {
+                    addPositionIfValid(x + 1, y, z);
+                } else if (Math.abs(x % 1) == 0.75) {
+                    addPositionIfValid(x - 1, y, z);
+                }
             }
-            if (Math.abs(x % 1) == 0.25 && yZero && zZero) {
-                addPositionIfValid(x + 1, y, z);
-                return;
-            }
-            if (Math.abs(x % 1) == 0.75 && yZero && zZero) {
-                addPositionIfValid(x - 1, y, z);
-                return;
-            }
-            if (Math.abs(z % 1) == 0.25 && yZero && xZero) {
-                addPositionIfValid(x, y, z + 1);
-                return;
-            }
-            if (Math.abs(z % 1) == 0.75 && yZero && xZero) {
-                addPositionIfValid(x, y, z - 1);
+            if (yZero && xZero) {
+                if (Math.abs(z % 1) == 0.25) {
+                    addPositionIfValid(x, y, z + 1);
+                } else if (Math.abs(z % 1) == 0.75) {
+                    addPositionIfValid(x, y, z - 1);
+                }
             }
         }
     }
 
     private void addPositionIfValid(double x, double y, double z) {
-        BlockPos pos = new BlockPos(Math.floor(x), Math.floor(y), Math.floor(z));
+        BlockPos pos = new BlockPos(x, y, z);
         Block block = Minecraft.getMinecraft().theWorld.getBlockState(pos).getBlock();
         if (block == Blocks.end_stone || block == Blocks.obsidian) {
-            positions.put(pos, 75);
+            positions.put(pos, HIGHLIGHT_DURATION + COOLDOWN_PERIOD);
         }
     }
 

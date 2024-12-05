@@ -1,5 +1,7 @@
 package utils.render;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -131,15 +133,24 @@ public class RenderUtil implements Utils {
         glColor4f(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, alpha);
 
         double[] playerPos = getInterpolatedPos(mc.thePlayer);
+        double[] blockPosInterpolated = {
+                blockPos.getX() - mc.getRenderManager().viewerPosX + 0.5,
+                blockPos.getY() - mc.getRenderManager().viewerPosY + 0.5,
+                blockPos.getZ() - mc.getRenderManager().viewerPosZ + 0.5
+        };
 
         glBegin(GL_LINES);
         glVertex3d(playerPos[0], playerPos[1] + mc.thePlayer.getEyeHeight(), playerPos[2]);
-
-        glVertex3d(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5);
+        glVertex3d(blockPosInterpolated[0], blockPosInterpolated[1], blockPosInterpolated[2]);
         glEnd();
 
         glDisable(GL_LINE_SMOOTH);
         GLUtil.end2DRendering();
         GLUtil.enableDepth();
+    }
+
+    public static int getStringWidth(String text) {
+        FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
+        return fontRenderer.getStringWidth(text);
     }
 }
