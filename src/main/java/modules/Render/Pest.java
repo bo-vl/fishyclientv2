@@ -10,9 +10,9 @@ import utils.render.ESPUtil;
 
 import java.awt.*;
 
-public class PestHelper extends Modules {
+public class Pest extends Modules {
     private static final String Withline = "line";
-    public PestHelper() {
+    public Pest() {
         super("Pest Helper", "Render");
         Modules.registerSetting(this, new Setting(Withline, "Draws a line to the mob", false));
     }
@@ -21,7 +21,7 @@ public class PestHelper extends Modules {
     public void onRenderWorldLast(RenderWorldLastEvent event) {
         for (PestTypes type : PestTypes.values()) {
             for (Entity entity : mc.theWorld.loadedEntityList) {
-                ESPUtil.Esp(entity, 2, Color.WHITE, 0.5f, Modules.getBool("Pest Helper", Withline), true, type.name().toLowerCase(), false);
+                ESPUtil.Esp(entity, 2, Color.WHITE, 1f, Modules.getBool("Pest Helper", Withline), true, type.name().toLowerCase(), false);
             }
         }
     }

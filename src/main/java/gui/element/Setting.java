@@ -11,7 +11,7 @@ public class Setting implements Utils {
     private int x, y, width, height;
     private SettingsType type;
     private String name, description;
-    private boolean boolValue, draggingSlider, isColorPickerExpanded;
+    private boolean boolValue, draggingSlider;
     private double sliderValue, minValue, maxValue;
 
     public enum SettingsType {
@@ -24,7 +24,7 @@ public class Setting implements Utils {
         this.description = description;
         this.type = SettingsType.BOOLEAN;
         this.boolValue = boolValue;
-        this.width = 100;
+        this.width = 120;
         this.height = 20;
     }
 
@@ -35,50 +35,65 @@ public class Setting implements Utils {
         this.sliderValue = sliderValue;
         this.minValue = minValue;
         this.maxValue = maxValue;
-        this.width = 100;
+        this.width = 120;
         this.height = 20;
     }
 
     public void draw(int mouseX, int mouseY, Color color, float alpha) {
-        Gui.drawRect(x, y, x + width, y + height + 10, color.getRGB());
+        Gui.drawRect(x, y, x + width, y + height, baseColor.getRGB());
+
+        if (isHovered(mouseX, mouseY)) {
+            Gui.drawRect(x, y, x + width, y + height, hoverColor.getRGB());
+        }
+
+        Color stateColor;
+        switch (type) {
+            case BOOLEAN:
+                stateColor = boolValue ? enabledColor : disabledColor;
+                break;
+            case SLIDER:
+                stateColor = settingsIndicatorColor;
+                break;
+            default:
+                stateColor = Color.GRAY;
+        }
+        Gui.drawRect(x, y, x + 5, y + height, stateColor.getRGB());
+
+        RenderUtil.RenderText(name, x + 10, y + 5, textColor);
 
         switch (type) {
             case BOOLEAN:
-                int textY = y + (height - mc.fontRendererObj.FONT_HEIGHT) / 2;
-                RenderUtil.RenderText(name, x + 5, textY, Color.WHITE);
-
                 int toggleWidth = 20;
                 int toggleHeight = 10;
                 int toggleX = x + width - toggleWidth - 5;
                 int toggleY = y + (height - toggleHeight) / 2;
 
-                int boolColor = boolValue ? Color.GREEN.getRGB() : Color.RED.getRGB();
+                int boolColor = boolValue ? enabledColor.getRGB() : disabledColor.getRGB();
                 Gui.drawRect(toggleX, toggleY, toggleX + toggleWidth, toggleY + toggleHeight, boolColor);
-
-                if (isHovered(mouseX, mouseY)) {
-                    RenderUtil.RenderText(description, mouseX + 10, mouseY, Color.WHITE);
-                }
                 break;
 
             case SLIDER:
-                RenderUtil.RenderText(name, x + 2, y + 2, Color.WHITE);
-
                 String sliderValueStr = String.format("%.2f", this.sliderValue);
                 int valueWidth = mc.fontRendererObj.getStringWidth(sliderValueStr);
-                RenderUtil.RenderText(sliderValueStr, x + width - valueWidth - 5, y + 2, Color.WHITE);
+                RenderUtil.RenderText(sliderValueStr, x + width - valueWidth - 5, y + 3, textColor);
 
-                Gui.drawRect(x + 5, y + height - 5, x + width - 5, y + height - 3, new Color(0, 0, 0, 100).getRGB());
+                int trackY = y + height - 5;
+                Gui.drawRect(x + 10, trackY, x + width - 10, trackY + 2, new Color(50, 50, 50, 100).getRGB());
 
                 double percentage = (this.sliderValue - minValue) / (maxValue - minValue);
-                int sliderX = (int) (x + 5 + percentage * (width - 10));
-                Gui.drawRect(sliderX - 2, y + height - 10, sliderX + 2, y + height, Color.WHITE.getRGB());
+                int sliderHandleX = (int) (x + 10 + percentage * (width - 20));
+                Gui.drawRect(sliderHandleX - 2, y + height - 8, sliderHandleX + 2, y + height - 2, settingsIndicatorColor.getRGB());
+                break;
+        }
 
-                if (isHovered(mouseX, mouseY)) {
-                    RenderUtil.RenderText(description, mouseX + 10, mouseY, Color.WHITE);
-                }
-                break;
-            default:
-                break;
+        int outlineColor = stateColor.getRGB();
+        Gui.drawRect(x - 1, y - 1, x + width + 1, y, outlineColor);
+        Gui.drawRect(x - 1, y + height, x + width + 1, y + height + 1, outlineColor);
+        Gui.drawRect(x - 1, y, x, y + height, outlineColor);
+        Gui.drawRect(x + width, y, x + width + 1, y + height, outlineColor);
+
+        if (isHovered(mouseX, mouseY)) {
+            RenderUtil.RenderText(description, mouseX + 10, mouseY, textColor);
         }
     }
 
@@ -101,24 +116,24 @@ public class Setting implements Utils {
     }
 
     public void handleMouseDrag(int mouseX) {
-        if (type == type.SLIDER && draggingSlider) {
+        if (type == SettingsType.SLIDER && draggingSlider) {
             updateSliderValue(mouseX);
         }
     }
 
     private void updateSliderValue(int mouseX) {
-        if (type == type.SLIDER) {
+        if (type == SettingsType.SLIDER) {
             double percentage = Math.max(0, Math.min(1, (mouseX - (x + 5)) / (double)(width - 10)));
             sliderValue = Math.round(minValue + percentage * (maxValue - minValue));
         }
     }
 
     public boolean isSliderHovered(int mouseX, int mouseY) {
-        return type == type.SLIDER &&
+        return type == SettingsType.SLIDER &&
                 mouseX >= x && mouseX <= x + width &&
                 mouseY >= y + height - 15 && mouseY <= y + height + 5;
     }
-    
+
     public void handleMouseRelease() {
         draggingSlider = false;
     }

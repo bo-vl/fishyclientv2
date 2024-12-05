@@ -1,6 +1,6 @@
 package modules.Render;
 
-import Events.SpawnParticleEvent;
+import Events.game.SpawnParticleEvent;
 import gui.Modules;
 import gui.element.Setting;
 import net.minecraft.block.Block;
@@ -20,12 +20,12 @@ import java.util.Map;
 
 import static utils.misc.MathUtils.basicallyEqual;
 
-public class EnderNodeHelper extends Modules {
+public class Endernode extends Modules {
     public static Map<BlockPos, Integer> positions = new HashMap<>();
 
     private static final String Withline = "line";
-    public EnderNodeHelper() {
-        super("Endernode Helper", "Render");
+    public Endernode() {
+        super("Endernode ESP", "Render");
         Modules.registerSetting(this, new Setting(Withline, "Draws a line to the block", false));
     }
 
@@ -98,7 +98,7 @@ public class EnderNodeHelper extends Modules {
     public void onRenderWorldLast(RenderWorldLastEvent event) {
         for (BlockPos pos : positions.keySet()) {
             RenderUtil.RenderBlock(pos, Color.WHITE, 1);
-            if (Modules.getBool("EnderNode Helper", Withline)) {
+            if (Modules.getBool("Endernode ESP", Withline)) {
                 RenderUtil.RenderTracerBlock(pos, 1, Color.WHITE, 1);
             }
         }

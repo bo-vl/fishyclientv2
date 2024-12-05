@@ -1,6 +1,6 @@
 package mixins.game;
 
-import Events.SpawnParticleEvent;
+import Events.game.SpawnParticleEvent;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;

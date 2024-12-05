@@ -1,11 +1,11 @@
 package gui.element;
 
-import gui.Config;
 import net.minecraft.client.gui.Gui;
 import utils.Utils;
+import utils.render.RenderUtil;
 
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Module implements Utils {
@@ -18,21 +18,34 @@ public class Module implements Utils {
     public Module(String name, String category) {
         this.name = name;
         this.category = category;
-        this.width = 100;
+        this.width = 120;
         this.height = 20;
     }
 
     public void draw(int mouseX, int mouseY, int offsetY, Color color, float alpha) {
-        this.y = offsetY + 1;
+        this.y = offsetY;
 
-        Gui.drawRect(x, y, x + width, y + height, color.getRGB());
-        mc.fontRendererObj.drawString(name, x + 5, y + 5, Color.WHITE.getRGB());
-        int outlineColor = enabled ? Color.GREEN.getRGB() : Color.RED.getRGB();
+        Gui.drawRect(x, y, x + width, y + height, baseColor.getRGB());
 
+        if (isHovered(mouseX, mouseY)) {
+            Gui.drawRect(x, y, x + width, y + height, hoverColor.getRGB());
+        }
+
+        Color stateColor = enabled ? enabledColor : disabledColor;
+        Gui.drawRect(x, y, x + 5, y + height, stateColor.getRGB());
+
+        RenderUtil.RenderText(name, x + 10, y + 6, textColor);
+
+        int outlineColor = enabled ? enabledColor.getRGB() : disabledColor.getRGB();
         Gui.drawRect(x - 1, y - 1, x + width + 1, y, outlineColor);
         Gui.drawRect(x - 1, y + height, x + width + 1, y + height + 1, outlineColor);
         Gui.drawRect(x - 1, y, x, y + height, outlineColor);
         Gui.drawRect(x + width, y, x + width + 1, y + height, outlineColor);
+    }
+
+    public boolean isHovered(int mouseX, int mouseY) {
+        return mouseX >= x && mouseX <= x + width &&
+                mouseY >= y && mouseY <= y + height;
     }
 
     public void addSetting(Setting setting) {

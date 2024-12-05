@@ -74,8 +74,8 @@ public class Modules extends Module {
         return setting != null ? setting.BoolValue() : false;
     }
 
-    public static double getSlider(String moduleName, String settingName) {
+    public static int getSlider(String moduleName, String settingName) {
         Setting setting = getSetting(moduleName, settingName);
-        return setting != null ? setting.SliderValue() : 0.0;
+        return (int) (setting != null ? setting.SliderValue() : 0.0);
     }
 }

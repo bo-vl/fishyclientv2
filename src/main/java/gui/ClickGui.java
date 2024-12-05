@@ -136,4 +136,5 @@ public class ClickGui extends GuiScreen {
             Config.save();
         }
     }
+
 }

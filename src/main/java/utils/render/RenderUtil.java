@@ -1,6 +1,5 @@
 package utils.render;
 
-import Events.RenderPartialTicks;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -92,9 +91,10 @@ public class RenderUtil implements Utils {
         GLUtil.enableDepth();
     }
 
-    public static void RenderText(String text, int x, int y, Color color) {
+    public static void RenderText(String text, float x, float y, Color color) {
         mc.fontRendererObj.drawStringWithShadow(text, x, y, color.getRGB());
     }
+
 
     public static boolean isHovered(int mouseX, int mouseY, int x, int y, int width, int height) {
         return mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;
@@ -107,7 +107,6 @@ public class RenderUtil implements Utils {
         GlStateManager.rotate(-mc.getRenderManager().playerViewY, 0, 1, 0);
         GlStateManager.rotate(mc.getRenderManager().playerViewX, 1, 0, 0);
         GlStateManager.scale(-0.025F * scale, -0.025F * scale, 0.025F * scale);
-        GlStateManager.disableLighting();
         GlStateManager.depthMask(false);
         GlStateManager.disableDepth();
         GlStateManager.enableBlend();
@@ -118,7 +117,6 @@ public class RenderUtil implements Utils {
 
         GlStateManager.enableDepth();
         GlStateManager.depthMask(true);
-        GlStateManager.enableLighting();
         GlStateManager.disableBlend();
         GlStateManager.popMatrix();
     }

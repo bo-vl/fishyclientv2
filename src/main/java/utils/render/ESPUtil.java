@@ -8,13 +8,16 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import utils.Utils;
 
-import Events.RenderPartialTicks;
+import Events.game.RenderPartialTicks;
 import utils.misc.MathUtils;
 
 import java.awt.*;
 
 public class ESPUtil implements Utils {
     public static double[] getInterpolatedPos(Entity entity) {
+        if (entity == null) {
+            return new double[]{0, 0, 0};
+        }
         float ticks = RenderPartialTicks.getPartialTicks();
         return new double[]{
                 MathUtils.interpolate(entity.lastTickPosX, entity.posX, ticks) - mc.getRenderManager().viewerPosX,
@@ -24,6 +27,9 @@ public class ESPUtil implements Utils {
     }
 
     public static double[] getInterpolatedBlockPos(BlockPos blockPos, double lastTickX, double lastTickY, double lastTickZ) {
+        if (blockPos == null) {
+            return new double[]{0, 0, 0};
+        }
         float ticks = RenderPartialTicks.getPartialTicks();
         double x = MathUtils.interpolate(lastTickX, blockPos.getX(), ticks) - mc.getRenderManager().viewerPosX;
         double y = MathUtils.interpolate(lastTickY, blockPos.getY(), ticks) - mc.getRenderManager().viewerPosY;
@@ -41,6 +47,9 @@ public class ESPUtil implements Utils {
     }
 
     public static AxisAlignedBB getInterpolatedBB(Entity entity) {
+        if (entity == null) {
+            return null;
+        }
         final double[] renderingEntityPos = getInterpolatedPos(entity);
         final double entityRenderWidth = entity.width / 1.5;
         return new AxisAlignedBB(renderingEntityPos[0] - entityRenderWidth,
@@ -49,6 +58,9 @@ public class ESPUtil implements Utils {
     }
 
     public static Entity findMobEntityBelow(Minecraft mc, Entity armorStand, Class<? extends Entity> entityClass) {
+        if (armorStand == null) {
+            return null;
+        }
         AxisAlignedBB searchBox = armorStand.getEntityBoundingBox().offset(0, -1, 0).expand(1, 1, 1);
         for (Entity entity : mc.theWorld.loadedEntityList) {
             if (entity != armorStand && entity.getEntityBoundingBox().intersectsWith(searchBox)) {

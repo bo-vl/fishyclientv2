@@ -1,6 +1,6 @@
 package mixins.game;
 
-import Events.RenderPartialTicks;
+import Events.game.RenderPartialTicks;
 import net.minecraftforge.common.MinecraftForge;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

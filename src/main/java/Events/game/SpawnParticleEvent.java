@@ -1,4 +1,4 @@
-package Events;
+package Events.game;
 
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Vec3;
