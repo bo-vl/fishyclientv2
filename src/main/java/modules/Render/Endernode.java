@@ -18,7 +18,7 @@ import java.awt.*;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static utils.misc.MathUtils.basicallyEqual;
+import static utils.misc.MathUtil.basicallyEqual;
 
 public class Endernode extends Modules {
     public static Map<BlockPos, Integer> positions = new ConcurrentHashMap<>();

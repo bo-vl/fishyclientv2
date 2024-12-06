@@ -10,7 +10,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import utils.lists.Island;
 import utils.player.InventoryUtil;
+import utils.skyblock.AreaUtil;
 
 public class Dojo extends Modules {
     private static final String TOD = "Dicipline";
@@ -23,9 +25,15 @@ public class Dojo extends Modules {
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
+        Island currentArea = AreaUtil.getArea();
+        if (currentArea != Island.CrimsonIsle) {
+            return;
+        }
+
         if (event.phase != TickEvent.Phase.START || !Modules.getBool("Dojo Helper", TOD)) {
             return;
         }
+
         if (mc.objectMouseOver == null || mc.objectMouseOver.entityHit == null) {
             return;
         }

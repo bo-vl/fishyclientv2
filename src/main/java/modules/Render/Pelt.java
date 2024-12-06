@@ -8,12 +8,16 @@ import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import utils.lists.Island;
 import utils.lists.Passive;
 import utils.lists.PeltTypes;
 import utils.render.ESPUtil;
+import utils.skyblock.AreaUtil;
 
 import java.awt.*;
 import java.util.Random;
+import java.util.*;
+import java.util.List;
 
 public class Pelt extends Modules {
     private static final Random random = new Random();
@@ -32,12 +36,24 @@ public class Pelt extends Modules {
 
     @SubscribeEvent
     public void onRenderWorldLast(RenderWorldLastEvent event) {
-        for (PeltTypes type : PeltTypes.values()) {
-            for (Passive passive : Passive.values()) {
-                for (Entity entity : Minecraft.getMinecraft().theWorld.loadedEntityList) {
-                    if (entity instanceof EntityArmorStand && entity.getDisplayName().getUnformattedText().toLowerCase().contains(passive.name().toLowerCase()) && entity.getDisplayName().getUnformattedText().toLowerCase().contains(type.name().toLowerCase())) {
-                        ESPUtil.Esp(entity, 2, Color.WHITE, 1f, Modules.getBool("Pelt Helper", Withline), false, null, true);
-                    }
+        Island currentArea = AreaUtil.getArea();
+        if (currentArea != Island.FarmingIsland) {
+            return;
+        }
+
+        List<Entity> loadedEntities = Minecraft.getMinecraft().theWorld.loadedEntityList;
+        for (Entity entity : loadedEntities) {
+            if (entity instanceof EntityArmorStand) {
+                String displayName = entity.getDisplayName().getUnformattedText().toLowerCase();
+                boolean matchesPelt = Arrays.stream(PeltTypes.values())
+                        .anyMatch(type -> displayName.contains(type.name().toLowerCase())) &&
+                        Arrays.stream(Passive.values())
+                                .anyMatch(passive -> displayName.contains(passive.name().toLowerCase()));
+
+                if (matchesPelt) {
+                    ESPUtil.Esp(entity, 2, Color.WHITE, 1f,
+                            Modules.getBool("Pelt Helper", Withline),
+                            false, null, true);
                 }
             }
         }
@@ -45,6 +61,11 @@ public class Pelt extends Modules {
 
     @SubscribeEvent
     public void onChatMessage(ClientChatReceivedEvent event) {
+        Island currentArea = AreaUtil.getArea();
+        if (currentArea != Island.FarmingIsland) {
+            return;
+        }
+
         if (!Modules.getBool("Pelt Helper", AutoWarpback)) {
             return;
         }

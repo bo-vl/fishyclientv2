@@ -20,7 +20,8 @@ public class ClickGui extends GuiScreen {
     public ClickGui() {
         categoryList.add(new Category("Skyblock", 50, 50));
         categoryList.add(new Category("Render", 200, 50));
-        categoryList.add(new Category("Settings", 350, 50));
+        categoryList.add(new Category("Combat", 350, 50));
+        categoryList.add(new Category("Settings", 500, 50));
     }
 
     @Override

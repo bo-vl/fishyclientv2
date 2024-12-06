@@ -43,7 +43,7 @@ public class HUD extends Modules {
                 int textWidth = RenderUtil.getStringWidth(module.getName());
                 Color textColor = Color.WHITE;
                 if (Modules.getBool("HUD", rainbow)) {
-                    textColor = ColorUtil.rainbow(Modules.getSlider("HUD", RainbowSpeed) * 100, (int) offset, 1.0f, 1.0f, 1.0f);
+                    textColor = ColorUtil.rainbow(Modules.getSlider("HUD", RainbowSpeed) * 10, (int) offset, 1.0f, 1.0f, 1.0f);
                 }
                 if (Modules.getBool("HUD", Background)) {
                     Gui.drawRect(2, (int) offset - 2, 2 + textWidth + 2, (int) offset + 10, new Color(0, 0, 0, 128).getRGB());

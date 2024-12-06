@@ -1,12 +1,10 @@
 package main;
 
 import gui.Modules;
-import modules.Render.Mineshaft;
-import modules.Render.Endernode;
-import modules.Render.Pelt;
-import modules.Render.Pest;
-import modules.Settings.HUD;
-import modules.Skyblock.Dojo;
+import modules.Render.*;
+import modules.Settings.*;
+import modules.Combat.*;
+import modules.Skyblock.*;
 
 public class ModuleInitializer {
     public static void init() {
@@ -16,5 +14,6 @@ public class ModuleInitializer {
         Modules.registerModule(new Endernode());
         Modules.registerModule(new Dojo());
         Modules.registerModule(new HUD());
+        Modules.registerModule(new Voidgloom());
     }
 }

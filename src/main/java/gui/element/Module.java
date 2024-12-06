@@ -41,6 +41,11 @@ public class Module implements Utils {
         Gui.drawRect(x - 1, y + height, x + width + 1, y + height + 1, outlineColor);
         Gui.drawRect(x - 1, y, x, y + height, outlineColor);
         Gui.drawRect(x + width, y, x + width + 1, y + height, outlineColor);
+
+        if (settings != null && !settings.isEmpty()) {
+            String symbol = settingsExpanded ? "-" : "+";
+            RenderUtil.RenderText(symbol, x + width - 10, y + 6, textColor);
+        }
     }
 
     public boolean isHovered(int mouseX, int mouseY) {
@@ -77,7 +82,7 @@ public class Module implements Utils {
         return settingsExpanded;
     }
 
-    public List<gui.element.Setting> getSettings() {
+    public List<Setting> getSettings() {
         return settings;
     }
 

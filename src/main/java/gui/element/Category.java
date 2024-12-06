@@ -28,22 +28,23 @@ public class Category implements Utils {
     }
 
     public void draw(int mouseX, int mouseY, Color color, float alpha) {
-        Gui.drawRect(x, y, x + width, y + height, headerColor.getRGB());
         int expandedHeight = calculateExpandedHeight();
 
-        if (expanded && !modules.isEmpty()) {
-            Gui.drawRect(x, y + height, x + width, y + height + expandedHeight, expandedColor.getRGB());
-        }
-
         if (isHovered(mouseX, mouseY)) {
-            Gui.drawRect(x, y, x + width, y + height, new Color(255, 255, 255, 20).getRGB());
+            Gui.drawRect(x, y, x + width, y + height, hoverColor.getRGB());
+        } else {
+            Gui.drawRect(x, y, x + width, y + height, headerColor.getRGB());
         }
-
-        RenderUtil.RenderText(name, x + 10, y + 7, textColor);
 
         if (expanded) {
+            RenderUtil.RenderText("-", x + width - 10, y + 8, textColor);
+            Gui.drawRect(x, y + height, x + width, y + height + expandedHeight, expandedColor.getRGB());
             drawModules(mouseX, mouseY, color, alpha);
+        } else {
+            RenderUtil.RenderText("+", x + width - 10, y + 8, textColor);
         }
+
+        RenderUtil.RenderText(name, x + 10, y + 8, textColor);
     }
 
     private int calculateExpandedHeight() {

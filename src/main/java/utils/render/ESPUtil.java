@@ -9,7 +9,7 @@ import net.minecraft.util.BlockPos;
 import utils.Utils;
 
 import Events.game.RenderPartialTicks;
-import utils.misc.MathUtils;
+import utils.misc.MathUtil;
 
 import java.awt.*;
 
@@ -20,9 +20,9 @@ public class ESPUtil implements Utils {
         }
         float ticks = RenderPartialTicks.getPartialTicks();
         return new double[]{
-                MathUtils.interpolate(entity.lastTickPosX, entity.posX, ticks) - mc.getRenderManager().viewerPosX,
-                MathUtils.interpolate(entity.lastTickPosY, entity.posY, ticks) - mc.getRenderManager().viewerPosY,
-                MathUtils.interpolate(entity.lastTickPosZ, entity.posZ, ticks) - mc.getRenderManager().viewerPosZ
+                MathUtil.interpolate(entity.lastTickPosX, entity.posX, ticks) - mc.getRenderManager().viewerPosX,
+                MathUtil.interpolate(entity.lastTickPosY, entity.posY, ticks) - mc.getRenderManager().viewerPosY,
+                MathUtil.interpolate(entity.lastTickPosZ, entity.posZ, ticks) - mc.getRenderManager().viewerPosZ
         };
     }
 
@@ -31,9 +31,9 @@ public class ESPUtil implements Utils {
             return new double[]{0, 0, 0};
         }
         float ticks = RenderPartialTicks.getPartialTicks();
-        double x = MathUtils.interpolate(lastTickX, blockPos.getX(), ticks) - mc.getRenderManager().viewerPosX;
-        double y = MathUtils.interpolate(lastTickY, blockPos.getY(), ticks) - mc.getRenderManager().viewerPosY;
-        double z = MathUtils.interpolate(lastTickZ, blockPos.getZ(), ticks) - mc.getRenderManager().viewerPosZ;
+        double x = MathUtil.interpolate(lastTickX, blockPos.getX(), ticks) - mc.getRenderManager().viewerPosX;
+        double y = MathUtil.interpolate(lastTickY, blockPos.getY(), ticks) - mc.getRenderManager().viewerPosY;
+        double z = MathUtil.interpolate(lastTickZ, blockPos.getZ(), ticks) - mc.getRenderManager().viewerPosZ;
 
         return new double[]{x, y, z};
     }

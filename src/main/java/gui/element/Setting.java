@@ -11,7 +11,7 @@ public class Setting implements Utils {
     private int x, y, width, height;
     private SettingsType type;
     private String name, description;
-    private boolean boolValue, draggingSlider;
+    private boolean boolValue, draggingSlider, moduleExpanded;
     private double sliderValue, minValue, maxValue;
 
     public enum SettingsType {
@@ -40,10 +40,10 @@ public class Setting implements Utils {
     }
 
     public void draw(int mouseX, int mouseY, Color color, float alpha) {
-        Gui.drawRect(x, y, x + width, y + height, baseColor.getRGB());
-
         if (isHovered(mouseX, mouseY)) {
             Gui.drawRect(x, y, x + width, y + height, hoverColor.getRGB());
+        } else {
+            Gui.drawRect(x, y, x + width, y + height, baseColor.getRGB());
         }
 
         Color stateColor;

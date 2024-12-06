@@ -8,10 +8,14 @@ import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import utils.lists.CorpseTypes;
+import utils.lists.Island;
 import utils.render.ESPUtil;
 import utils.render.RenderUtil;
+import utils.skyblock.AreaUtil;
 
 import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 public class Mineshaft extends Modules {
     private static final String Withline = "line";
@@ -27,19 +31,29 @@ public class Mineshaft extends Modules {
 
     @SubscribeEvent
     public void onRenderWorldLast(RenderWorldLastEvent event) {
-        for (CorpseTypes type : CorpseTypes.values()) {
-            for (Entity entity : Minecraft.getMinecraft().theWorld.loadedEntityList) {
-                if (entity instanceof EntityArmorStand) {
-                    EntityArmorStand armorStand = (EntityArmorStand) entity;
-                    if (armorStand.getEquipmentInSlot(4) != null) {
-                        String helmetName = armorStand.getEquipmentInSlot(4).getDisplayName();
-                        if (helmetName != null && helmetName.contains(type.getItemName())) {
-                            if (Modules.getBool("Mineshaft Helper", CorpseName)) {
-                                RenderUtil.renderFloatingText(type.name(), armorStand, Color.WHITE, (float) Modules.getSlider("Mineshaft Helper", TextScale), 0);
-                            }
-                            ESPUtil.Esp(armorStand, 2, Color.white, 0.5f, Modules.getBool("Mineshaft Helper", Withline), false, null, false);
+        Island currentArea = AreaUtil.getArea();
+        if (currentArea != Island.Mineshaft) {
+            return;
+        }
+
+        List<Entity> loadedEntities = Minecraft.getMinecraft().theWorld.loadedEntityList;
+        for (Entity entity : loadedEntities) {
+            if (entity instanceof EntityArmorStand) {
+                EntityArmorStand armorStand = (EntityArmorStand) entity;
+                if (armorStand.getEquipmentInSlot(4) != null) {
+                    String helmetName = armorStand.getEquipmentInSlot(4).getDisplayName();
+                    Optional<CorpseTypes> matchingType = Arrays.stream(CorpseTypes.values()).filter(type -> helmetName != null && helmetName.contains(type.getItemName())).findFirst();
+
+                    matchingType.ifPresent(type -> {
+                        if (Modules.getBool("Mineshaft Helper", CorpseName)) {
+                            RenderUtil.renderFloatingText(type.name(), armorStand, Color.WHITE,
+                                    (float) Modules.getSlider("Mineshaft Helper", TextScale), 0);
                         }
-                    }
+
+                        ESPUtil.Esp(armorStand, 2, Color.white, 0.5f,
+                                Modules.getBool("Mineshaft Helper", Withline),
+                                false, null, false);
+                    });
                 }
             }
         }

@@ -1,6 +1,6 @@
 package utils.misc;
 
-public class MathUtils {
+public class MathUtil {
     public static double interpolate(double from, double to, double pct) {
         return (from + (to - from) * pct);
     }
