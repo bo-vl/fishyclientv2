@@ -1,9 +1,9 @@
-// src/main/java/modules/Render/Pest.java
 package modules.Render;
 
 import gui.Modules;
 import gui.element.Setting;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import utils.lists.Island;
@@ -32,13 +32,15 @@ public class Pest extends Modules {
 
         List<Entity> loadedEntities = mc.theWorld.loadedEntityList;
         for (Entity entity : loadedEntities) {
-            String entityName = entity.getName().toLowerCase();
-            if (Arrays.stream(PestTypes.values())
-                    .anyMatch(type -> entityName.contains(type.name().toLowerCase()))) {
+            if (entity instanceof EntityArmorStand) {
+                String entityName = entity.getName().toLowerCase();
+                if (Arrays.stream(PestTypes.values())
+                        .anyMatch(type -> entityName.contains(type.name().toLowerCase()))) {
 
-                ESPUtil.Esp(entity, 2, Color.WHITE, 1f,
-                        Modules.getBool("Pest Helper", Withline),
-                        true, entityName, false);
+                    ESPUtil.Esp(entity, 2, Color.WHITE, 1f,
+                            Modules.getBool("Pest Helper", Withline),
+                            true, entityName, false);
+                }
             }
         }
     }

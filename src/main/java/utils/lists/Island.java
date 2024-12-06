@@ -6,7 +6,7 @@ import java.util.List;
 public enum Island {
     SinglePlayer("Singleplayer"),
     PrivateIsland("Private Island"),
-    Garden("The Garden"),
+    Garden("Garden"),
     SpiderDen("Spider's Den"),
     CrimsonIsle("Crimson Isle"),
     TheEnd("The End"),
