@@ -3,7 +3,6 @@ package utils.render;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import utils.Utils;
@@ -72,29 +71,17 @@ public class ESPUtil implements Utils {
         return null;
     }
 
-    public static void Esp(Entity entity, int width, Color color, float opacity, boolean tracer, boolean WithName, String name, boolean ismob) {
-        if (WithName) {
-            if (!(entity instanceof EntityArmorStand)) {
-                return;
-            }
-
-            String displayName = entity.getDisplayName().getUnformattedText().toLowerCase();
-
-            if (!displayName.contains(name.toLowerCase())) {
-                return;
-            }
-
-            entity = findMobEntityBelow(mc, entity, Entity.class);
+    public static void Esp(Entity entity, int width, Color color, float opacity, boolean tracer, boolean filled) {
+        if (entity == null) {
+            return;
         }
 
-        if (ismob) {
-            entity = findMobEntityBelow(mc, entity, EntityLivingBase.class);
-            if (entity == null) {
-                return;
-            }
+        if (filled) {
+            RenderUtil.renderFilledBB((EntityLivingBase) entity, color, opacity);
+        } else {
+            RenderUtil.renderBB((EntityLivingBase) entity, color, opacity);
         }
 
-        RenderUtil.renderBB((EntityLivingBase) entity, color, opacity);
         if (tracer) {
             RenderUtil.renderTracer(entity, width, color, opacity);
         }

@@ -67,4 +67,5 @@ public class main {
     public static KeyBinding getClickGuiKey() {
         return CLICK_GUI_KEY;
     }
+
 }

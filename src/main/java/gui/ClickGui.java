@@ -73,6 +73,11 @@ public class ClickGui extends GuiScreen {
                         break;
                     }
 
+                    if (RenderUtil.isHovered(mouseX, mouseY, module.getDimensions()[0], module.getDimensions()[1], module.getDimensions()[2], module.getDimensions()[3])) {
+                        module.toggle();
+                        break;
+                    }
+
                     if (module.SettingsExpanded()) {
                         for (Setting setting : module.getSettings()) {
                             if (RenderUtil.isHovered(mouseX, mouseY, setting.getDimensions()[0], setting.getDimensions()[1], setting.getDimensions()[2], setting.getDimensions()[3])) {
@@ -82,13 +87,6 @@ public class ClickGui extends GuiScreen {
                         }
                     }
                 }
-            }
-        }
-
-        for (Module module : Modules.getModules().values()) {
-            if (RenderUtil.isHovered(mouseX, mouseY, module.getDimensions()[0], module.getDimensions()[1], module.getDimensions()[2], module.getDimensions()[3]) && mouseButton == 0) {
-                module.toggle();
-                break;
             }
         }
     }
@@ -137,5 +135,4 @@ public class ClickGui extends GuiScreen {
             Config.save();
         }
     }
-
 }

@@ -50,9 +50,7 @@ public class Mineshaft extends Modules {
                                     (float) Modules.getSlider("Mineshaft Helper", TextScale), 0);
                         }
 
-                        ESPUtil.Esp(armorStand, 2, Color.white, 0.5f,
-                                Modules.getBool("Mineshaft Helper", Withline),
-                                false, null, false);
+                        ESPUtil.Esp(armorStand, 2, Color.white, 0.5f, Modules.getBool("Mineshaft Helper", Withline), false);
                     });
                 }
             }

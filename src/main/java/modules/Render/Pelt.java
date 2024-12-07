@@ -51,9 +51,7 @@ public class Pelt extends Modules {
                                 .anyMatch(passive -> displayName.contains(passive.name().toLowerCase()));
 
                 if (matchesPelt) {
-                    ESPUtil.Esp(entity, 2, Color.WHITE, 1f,
-                            Modules.getBool("Pelt Helper", Withline),
-                            false, null, true);
+                    ESPUtil.Esp(entity, 2, Color.WHITE, 1f, Modules.getBool("Pelt Helper", Withline), false);
                 }
             }
         }

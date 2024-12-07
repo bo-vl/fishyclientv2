@@ -3,6 +3,7 @@ package gui.element;
 import gui.Config;
 import net.minecraft.client.gui.Gui;
 import utils.Utils;
+import utils.misc.ColorUtil;
 import utils.render.RenderUtil;
 
 import java.awt.*;
@@ -30,21 +31,20 @@ public class Category implements Utils {
     public void draw(int mouseX, int mouseY, Color color, float alpha) {
         int expandedHeight = calculateExpandedHeight();
 
-        if (isHovered(mouseX, mouseY)) {
-            Gui.drawRect(x, y, x + width, y + height, hoverColor.getRGB());
-        } else {
-            Gui.drawRect(x, y, x + width, y + height, headerColor.getRGB());
-        }
+        int backgroundColor = isHovered(mouseX, mouseY) ? ColorUtil.interpolateColor(headerColor, hoverColor, 0.2f) : headerColor.getRGB();
+        Gui.drawRect(x, y, x + width, y + height, backgroundColor);
 
-        if (expanded) {
-            RenderUtil.RenderText("-", x + width - 10, y + 8, textColor);
-            Gui.drawRect(x, y + height, x + width, y + height + expandedHeight, expandedColor.getRGB());
-            drawModules(mouseX, mouseY, color, alpha);
-        } else {
-            RenderUtil.RenderText("+", x + width - 10, y + 8, textColor);
-        }
+        Color expandSymbolColor = new Color(textColor.getRed(), textColor.getGreen(), textColor.getBlue(), 180);
+        String expansionSymbol = expanded ? "-" : "+";
+        RenderUtil.RenderText(expansionSymbol, x + width - 20, y + 8, expandSymbolColor);
 
         RenderUtil.RenderText(name, x + 10, y + 8, textColor);
+
+        if (expanded) {
+            Gui.drawRect(x, y + height, x + width, y + height + expandedHeight, new Color(expandedColor.getRed(), expandedColor.getGreen(), expandedColor.getBlue(), 150).getRGB());
+
+            drawModules(mouseX, mouseY, color, alpha);
+        }
     }
 
     private int calculateExpandedHeight() {
@@ -53,7 +53,7 @@ public class Category implements Utils {
             moduleHeight += module.getDimensions()[3];
 
             if (module.SettingsExpanded()) {
-                moduleHeight += module.getSettings().size() * 20;
+                moduleHeight += module.getSettings().size() * 25;
             }
         }
         return moduleHeight;

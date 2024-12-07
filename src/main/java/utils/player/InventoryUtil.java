@@ -1,7 +1,6 @@
 package utils.player;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import utils.Utils;
 
 public class InventoryUtil implements Utils {
@@ -17,6 +16,12 @@ public class InventoryUtil implements Utils {
                 mc.thePlayer.inventory.currentItem = i;
                 return;
             }
+        }
+    }
+
+    public static void switchToSlot(int slot) {
+        if (slot >= 0 && slot < 9) {
+            mc.thePlayer.inventory.currentItem = slot;
         }
     }
 }

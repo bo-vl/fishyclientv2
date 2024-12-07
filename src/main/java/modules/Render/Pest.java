@@ -37,9 +37,7 @@ public class Pest extends Modules {
                 if (Arrays.stream(PestTypes.values())
                         .anyMatch(type -> entityName.contains(type.name().toLowerCase()))) {
 
-                    ESPUtil.Esp(entity, 2, Color.WHITE, 1f,
-                            Modules.getBool("Pest Helper", Withline),
-                            true, entityName, false);
+                    ESPUtil.Esp(entity, 2, Color.WHITE, 1f, Modules.getBool("Pest Helper", Withline), false);
                 }
             }
         }

@@ -5,9 +5,14 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 
+import net.minecraftforge.common.util.Constants;
 import org.lwjgl.opengl.GL11;
 import utils.Utils;
 
@@ -32,6 +37,30 @@ public class RenderUtil implements Utils {
         glColor4f(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, actualAlpha);
 
         renderBoundingBox(bb);
+
+        glDepthMask(true);
+        glEnable(GL_DEPTH_TEST);
+
+        GLUtil.disableCaps();
+        GLUtil.end2DRendering();
+
+        GlStateManager.popMatrix();
+    }
+
+    public static void renderFilledBB(EntityLivingBase entityLivingBase, Color color, float alpha) {
+        AxisAlignedBB bb = ESPUtil.getInterpolatedBB(entityLivingBase);
+        GlStateManager.pushMatrix();
+        GLUtil.setup2DRendering();
+        GLUtil.enableCaps(GL_BLEND, GL_POINT_SMOOTH, GL_POLYGON_SMOOTH, GL_LINE_SMOOTH);
+
+        glDisable(GL_DEPTH_TEST);
+        glDepthMask(false);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        float actualAlpha = .3f * alpha;
+        glColor4f(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, actualAlpha);
+
+        renderFilledBoundingBox(bb);
 
         glDepthMask(true);
         glEnable(GL_DEPTH_TEST);

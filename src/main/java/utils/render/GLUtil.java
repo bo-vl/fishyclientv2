@@ -1,12 +1,15 @@
 package utils.render;
 
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraftforge.common.MinecraftForge;
+import utils.Utils;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class GLUtil {
+public class GLUtil implements Utils {
     public static int[] enabledCaps = new int[32];
 
     public static void enableDepth() {
@@ -96,5 +99,42 @@ public class GLUtil {
         glVertex3d(bb.minX, bb.maxY, bb.maxZ);
 
         glEnd();
+    }
+
+    public static void renderFilledBoundingBox(AxisAlignedBB bb) {
+
+        worldrenderer.begin(GL_QUADS, DefaultVertexFormats.POSITION);
+
+        worldrenderer.pos(bb.minX, bb.minY, bb.minZ).endVertex();
+        worldrenderer.pos(bb.maxX, bb.minY, bb.minZ).endVertex();
+        worldrenderer.pos(bb.maxX, bb.minY, bb.maxZ).endVertex();
+        worldrenderer.pos(bb.minX, bb.minY, bb.maxZ).endVertex();
+
+        worldrenderer.pos(bb.minX, bb.maxY, bb.minZ).endVertex();
+        worldrenderer.pos(bb.minX, bb.maxY, bb.maxZ).endVertex();
+        worldrenderer.pos(bb.maxX, bb.maxY, bb.maxZ).endVertex();
+        worldrenderer.pos(bb.maxX, bb.maxY, bb.minZ).endVertex();
+
+        worldrenderer.pos(bb.minX, bb.minY, bb.minZ).endVertex();
+        worldrenderer.pos(bb.minX, bb.maxY, bb.minZ).endVertex();
+        worldrenderer.pos(bb.maxX, bb.maxY, bb.minZ).endVertex();
+        worldrenderer.pos(bb.maxX, bb.minY, bb.minZ).endVertex();
+
+        worldrenderer.pos(bb.minX, bb.minY, bb.maxZ).endVertex();
+        worldrenderer.pos(bb.maxX, bb.minY, bb.maxZ).endVertex();
+        worldrenderer.pos(bb.maxX, bb.maxY, bb.maxZ).endVertex();
+        worldrenderer.pos(bb.minX, bb.maxY, bb.maxZ).endVertex();
+
+        worldrenderer.pos(bb.minX, bb.minY, bb.minZ).endVertex();
+        worldrenderer.pos(bb.minX, bb.minY, bb.maxZ).endVertex();
+        worldrenderer.pos(bb.minX, bb.maxY, bb.maxZ).endVertex();
+        worldrenderer.pos(bb.minX, bb.maxY, bb.minZ).endVertex();
+
+        worldrenderer.pos(bb.maxX, bb.minY, bb.minZ).endVertex();
+        worldrenderer.pos(bb.maxX, bb.maxY, bb.minZ).endVertex();
+        worldrenderer.pos(bb.maxX, bb.maxY, bb.maxZ).endVertex();
+        worldrenderer.pos(bb.maxX, bb.minY, bb.maxZ).endVertex();
+
+        tessellator.draw();
     }
 }

@@ -2,6 +2,7 @@ package gui.element;
 
 import net.minecraft.client.gui.Gui;
 import utils.Utils;
+import utils.misc.ColorUtil;
 import utils.render.RenderUtil;
 
 import java.awt.*;
@@ -25,26 +26,18 @@ public class Module implements Utils {
     public void draw(int mouseX, int mouseY, int offsetY, Color color, float alpha) {
         this.y = offsetY;
 
-        Gui.drawRect(x, y, x + width, y + height, baseColor.getRGB());
-
-        if (isHovered(mouseX, mouseY)) {
-            Gui.drawRect(x, y, x + width, y + height, hoverColor.getRGB());
-        }
+        int backgroundColor = isHovered(mouseX, mouseY) ? ColorUtil.interpolateColor(baseColor, hoverColor, 0.2f) : baseColor.getRGB();
+        Gui.drawRect(x, y, x + width, y + height, backgroundColor);
 
         Color stateColor = enabled ? enabledColor : disabledColor;
-        Gui.drawRect(x, y, x + 5, y + height, stateColor.getRGB());
+        Gui.drawRect(x, y, x + 4, y + height, stateColor.getRGB());
 
         RenderUtil.RenderText(name, x + 10, y + 6, textColor);
 
-        int outlineColor = enabled ? enabledColor.getRGB() : disabledColor.getRGB();
-        Gui.drawRect(x - 1, y - 1, x + width + 1, y, outlineColor);
-        Gui.drawRect(x - 1, y + height, x + width + 1, y + height + 1, outlineColor);
-        Gui.drawRect(x - 1, y, x, y + height, outlineColor);
-        Gui.drawRect(x + width, y, x + width + 1, y + height, outlineColor);
-
         if (settings != null && !settings.isEmpty()) {
+            Color expandSymbolColor = new Color(textColor.getRed(), textColor.getGreen(), textColor.getBlue(), 180);
             String symbol = settingsExpanded ? "-" : "+";
-            RenderUtil.RenderText(symbol, x + width - 10, y + 6, textColor);
+            RenderUtil.RenderText(symbol, x + width - 20, y + 6, expandSymbolColor);
         }
     }
 

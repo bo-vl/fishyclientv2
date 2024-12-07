@@ -12,7 +12,9 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import utils.lists.Island;
 import utils.render.RenderUtil;
+import utils.skyblock.AreaUtil;
 
 import java.awt.*;
 import java.util.Map;
@@ -33,7 +35,10 @@ public class Endernode extends Modules {
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
-        if (mc.theWorld == null) return;
+        Island currentArea = AreaUtil.getArea();
+        if (currentArea != Island.TheEnd) {
+            return;
+        }
 
         positions.entrySet().removeIf(entry -> {
             BlockPos pos = entry.getKey();
@@ -94,6 +99,11 @@ public class Endernode extends Modules {
 
     @SubscribeEvent
     public void onRenderWorldLast(RenderWorldLastEvent event) {
+        Island currentArea = AreaUtil.getArea();
+        if (currentArea != Island.TheEnd) {
+            return;
+        }
+
         for (BlockPos pos : positions.keySet()) {
             RenderUtil.RenderBlock(pos, Color.WHITE, 1);
             if (Modules.getBool("Endernode ESP", Withline)) {
