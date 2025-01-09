@@ -1,14 +1,13 @@
 package utils.skyblock;
 
-import net.minecraft.client.network.NetHandlerPlayClient;
-import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import utils.Utils;
 import utils.lists.Island;
+import utils.misc.TabListUtil;
 
-import java.util.Collection;
+import java.util.List;
 
 public class AreaUtil implements Utils {
 
@@ -29,20 +28,19 @@ public class AreaUtil implements Utils {
             return Island.SinglePlayer;
         }
 
-        NetHandlerPlayClient netHandlerPlayClient = mc.thePlayer != null ? mc.thePlayer.sendQueue : null;
-        if (netHandlerPlayClient == null) {
+        if (mc.thePlayer == null) {
             return Island.Unknown;
         }
 
-        Collection<NetworkPlayerInfo> list = netHandlerPlayClient.getPlayerInfoMap();
-        if (list == null) {
+        List<String> tabList = TabListUtil.getTabListLines();
+        if (tabList == null || tabList.isEmpty()) {
             return Island.Unknown;
         }
 
-        String area = list.stream()
-                .map(NetworkPlayerInfo::getDisplayName)
-                .filter(displayName -> displayName != null && (displayName.getUnformattedText().startsWith("Area: ") || displayName.getUnformattedText().startsWith("Dungeon: ")))
-                .map(displayName -> displayName.getFormattedText())
+        String area = tabList.stream()
+                .filter(line -> line != null)
+                .map(line -> line.replaceAll("§[0-9a-fk-or]", "").trim())
+                .filter(line -> line.contains("Area: ") || line.contains("Dungeon: "))
                 .findFirst()
                 .orElse(null);
 

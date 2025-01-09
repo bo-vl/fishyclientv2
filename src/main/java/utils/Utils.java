@@ -17,8 +17,6 @@ public interface Utils {
     public Color enabledColor = new Color(76, 175, 80, 200);
     public Color disabledColor = new Color(244, 67, 54, 100);
     public Color textColor = new Color(255, 255, 255);
-    public Color settingsIndicatorColor = new Color(150, 150, 250);
     public Color headerColor = new Color(25, 25, 25, 250);
     public Color expandedColor = new Color(50, 50, 50, 230);
-    public Color accentColor = new Color(100, 100, 250);
 }

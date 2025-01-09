@@ -3,8 +3,8 @@ package main;
 import gui.Modules;
 import modules.Render.*;
 import modules.Settings.*;
-import modules.Combat.*;
 import modules.Skyblock.*;
+import modules.Debug.*;
 
 public class ModuleInitializer {
     public static void init() {
@@ -14,6 +14,6 @@ public class ModuleInitializer {
         Modules.registerModule(new Endernode());
         Modules.registerModule(new Dojo());
         Modules.registerModule(new HUD());
-        Modules.registerModule(new Voidgloom());
+        Modules.registerModule(new ShowArmorStands());
     }
 }

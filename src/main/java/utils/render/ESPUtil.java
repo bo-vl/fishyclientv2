@@ -60,7 +60,7 @@ public class ESPUtil implements Utils {
         if (armorStand == null) {
             return null;
         }
-        AxisAlignedBB searchBox = armorStand.getEntityBoundingBox().offset(0, -1, 0).expand(0.5, 1, 0.5);
+        AxisAlignedBB searchBox = armorStand.getEntityBoundingBox().offset(0, -2, 0).expand(1, 2, 1);
         for (Entity entity : mc.theWorld.loadedEntityList) {
             if (entity != armorStand && entity.getEntityBoundingBox().intersectsWith(searchBox)) {
                 if (entityClass.isInstance(entity)) {

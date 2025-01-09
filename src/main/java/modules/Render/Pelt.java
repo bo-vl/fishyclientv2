@@ -10,7 +10,6 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import utils.lists.Island;
 import utils.lists.Passive;
-import utils.lists.PeltTypes;
 import utils.render.ESPUtil;
 import utils.skyblock.AreaUtil;
 
@@ -45,13 +44,16 @@ public class Pelt extends Modules {
         for (Entity entity : loadedEntities) {
             if (entity instanceof EntityArmorStand) {
                 String displayName = entity.getDisplayName().getUnformattedText().toLowerCase();
-                boolean matchesPelt = Arrays.stream(PeltTypes.values())
-                        .anyMatch(type -> displayName.contains(type.name().toLowerCase())) &&
-                        Arrays.stream(Passive.values())
-                                .anyMatch(passive -> displayName.contains(passive.name().toLowerCase()));
+                Passive matchingPassive = Arrays.stream(Passive.values())
+                        .filter(passive -> displayName.contains(passive.name().toLowerCase()))
+                        .findFirst()
+                        .orElse(null);
 
-                if (matchesPelt) {
-                    ESPUtil.Esp(entity, 2, Color.WHITE, 1f, Modules.getBool("Pelt Helper", Withline), false);
+                if (matchingPassive != null) {
+                    Entity mobEntity = ESPUtil.findMobEntityBelow(Minecraft.getMinecraft(), entity, matchingPassive.getEntityClass());
+                    if (mobEntity != null) {
+                        ESPUtil.Esp(mobEntity, 2, Color.WHITE, 1f, Modules.getBool("Pelt Helper", Withline), false);
+                    }
                 }
             }
         }

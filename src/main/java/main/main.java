@@ -5,8 +5,6 @@ import gui.Config;
 import modules.Settings.HUD;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.util.BlockPos;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -14,16 +12,11 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import proxy.CommonProxy;
-import utils.render.RenderUtil;
-
-import java.awt.*;
 
 @Mod(modid = ModInfo.ID, name = ModInfo.NAME, version = ModInfo.VERSION)
 public class main {
@@ -32,7 +25,7 @@ public class main {
 
     private static final KeyBinding CLICK_GUI_KEY = new KeyBinding(
             "Fishy client Gui",
-            Keyboard.KEY_RSHIFT,
+            Keyboard.KEY_P,
             "Fishy client v2"
     );
 
@@ -67,5 +60,4 @@ public class main {
     public static KeyBinding getClickGuiKey() {
         return CLICK_GUI_KEY;
     }
-
 }

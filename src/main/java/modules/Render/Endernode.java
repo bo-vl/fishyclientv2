@@ -1,14 +1,10 @@
 package modules.Render;
 
-import Events.game.SpawnParticleEvent;
 import gui.Modules;
 import gui.element.Setting;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -17,20 +13,19 @@ import utils.render.RenderUtil;
 import utils.skyblock.AreaUtil;
 
 import java.awt.*;
-import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static utils.misc.MathUtil.basicallyEqual;
-
 public class Endernode extends Modules {
-    public static Map<BlockPos, Integer> positions = new ConcurrentHashMap<>();
-    private static final int HIGHLIGHT_DURATION = 150;
-    private static final int COOLDOWN_PERIOD = 20;
+    public static Set<BlockPos> positions = ConcurrentHashMap.newKeySet();
 
     private static final String Withline = "line";
+    private static final String RadiusCheck = "Radius";
+
     public Endernode() {
         super("Endernode ESP", "Render");
         Modules.registerSetting(this, new Setting(Withline, "Draws a line to the block", false));
+        Modules.registerSetting(this, new Setting(RadiusCheck, "Radius of blocks", 10, 1, 50));
     }
 
     @SubscribeEvent
@@ -40,60 +35,22 @@ public class Endernode extends Modules {
             return;
         }
 
-        positions.entrySet().removeIf(entry -> {
-            BlockPos pos = entry.getKey();
-            int ticks = entry.getValue() - 1;
 
-            IBlockState state = mc.theWorld.getBlockState(pos);
-            if (state == null || (state.getBlock() != Blocks.end_stone && state.getBlock() != Blocks.obsidian) || ticks <= 0) {
-                return true;
-            } else {
-                entry.setValue(ticks);
-                return false;
-            }
-        });
-    }
+        BlockPos playerPos = mc.thePlayer.getPosition();
+        int radius = Modules.getSlider("Endernode ESP", RadiusCheck);
 
-    @SubscribeEvent
-    public void onParticleSpawn(SpawnParticleEvent event) {
-        if (event.particleType == EnumParticleTypes.PORTAL) {
-            double x = event.position.xCoord;
-            double y = event.position.yCoord;
-            double z = event.position.zCoord;
-
-            boolean xZero = basicallyEqual((x - 0.5) % 1, 0, 0.2);
-            boolean yZero = basicallyEqual((y - 0.5) % 1, 0, 0.2);
-            boolean zZero = basicallyEqual((z - 0.5) % 1, 0, 0.2);
-
-            if (xZero && zZero) {
-                if (Math.abs(y % 1) == 0.25) {
-                    addPositionIfValid(x, y - 1, z);
-                } else if (Math.abs(y % 1) == 0.75) {
-                    addPositionIfValid(x, y + 1, z);
+        for (int x = -radius; x <= radius; x++) {
+            for (int y = -radius; y <= radius; y++) {
+                for (int z = -radius; z <= radius; z++) {
+                    BlockPos checkPos = playerPos.add(x, y, z);
+                    IBlockState blockState = mc.theWorld.getBlockState(checkPos);
+                    if (blockState.getBlock() == Blocks.stained_hardened_clay && blockState.getBlock().getMetaFromState(blockState) == 10) {
+                        positions.add(checkPos);
+                    } else {
+                        positions.remove(checkPos);
+                    }
                 }
             }
-            if (yZero && zZero) {
-                if (Math.abs(x % 1) == 0.25) {
-                    addPositionIfValid(x + 1, y, z);
-                } else if (Math.abs(x % 1) == 0.75) {
-                    addPositionIfValid(x - 1, y, z);
-                }
-            }
-            if (yZero && xZero) {
-                if (Math.abs(z % 1) == 0.25) {
-                    addPositionIfValid(x, y, z + 1);
-                } else if (Math.abs(z % 1) == 0.75) {
-                    addPositionIfValid(x, y, z - 1);
-                }
-            }
-        }
-    }
-
-    private void addPositionIfValid(double x, double y, double z) {
-        BlockPos pos = new BlockPos(x, y, z);
-        Block block = Minecraft.getMinecraft().theWorld.getBlockState(pos).getBlock();
-        if (block == Blocks.end_stone || block == Blocks.obsidian) {
-            positions.put(pos, HIGHLIGHT_DURATION + COOLDOWN_PERIOD);
         }
     }
 
@@ -104,7 +61,7 @@ public class Endernode extends Modules {
             return;
         }
 
-        for (BlockPos pos : positions.keySet()) {
+        for (BlockPos pos : positions) {
             RenderUtil.RenderBlock(pos, Color.WHITE, 1);
             if (Modules.getBool("Endernode ESP", Withline)) {
                 RenderUtil.RenderTracerBlock(pos, 1, Color.WHITE, 1);

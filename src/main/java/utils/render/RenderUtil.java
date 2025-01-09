@@ -5,14 +5,9 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 
-import net.minecraftforge.common.util.Constants;
 import org.lwjgl.opengl.GL11;
 import utils.Utils;
 
@@ -181,5 +176,30 @@ public class RenderUtil implements Utils {
     public static int getStringWidth(String text) {
         FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
         return fontRenderer.getStringWidth(text);
+    }
+
+    public static void renderHighlight(int x, int y) {
+        GlStateManager.pushMatrix();
+        GlStateManager.disableLighting();
+        GlStateManager.disableDepth();
+        GlStateManager.disableTexture2D();
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+        GL11.glLineWidth(2F);
+        GL11.glColor4f(1F, 1F, 1F, 1F);
+
+        GL11.glBegin(GL11.GL_LINE_LOOP);
+        GL11.glVertex2f(x, y);
+        GL11.glVertex2f(x + 16, y);
+        GL11.glVertex2f(x + 16, y + 16);
+        GL11.glVertex2f(x, y + 16);
+        GL11.glEnd();
+
+        GlStateManager.enableTexture2D();
+        GlStateManager.enableLighting();
+        GlStateManager.enableDepth();
+        GlStateManager.disableBlend();
+        GlStateManager.popMatrix();
     }
 }

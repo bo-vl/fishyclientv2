@@ -14,8 +14,9 @@ import utils.render.RenderUtil;
 import utils.skyblock.AreaUtil;
 
 import java.awt.*;
-import java.util.*;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class Mineshaft extends Modules {
     private static final String Withline = "line";
@@ -42,15 +43,18 @@ public class Mineshaft extends Modules {
                 EntityArmorStand armorStand = (EntityArmorStand) entity;
                 if (armorStand.getEquipmentInSlot(4) != null) {
                     String helmetName = armorStand.getEquipmentInSlot(4).getDisplayName();
-                    Optional<CorpseTypes> matchingType = Arrays.stream(CorpseTypes.values()).filter(type -> helmetName != null && helmetName.contains(type.getItemName())).findFirst();
+                    Optional<CorpseTypes> matchingType = Arrays.stream(CorpseTypes.values())
+                            .filter(type -> helmetName != null && helmetName.contains(type.getItemName()))
+                            .findFirst();
 
                     matchingType.ifPresent(type -> {
                         if (Modules.getBool("Mineshaft Helper", CorpseName)) {
-                            RenderUtil.renderFloatingText(type.name(), armorStand, Color.WHITE,
+                            RenderUtil.renderFloatingText(type.getDisplayName(), armorStand, Color.WHITE,
                                     (float) Modules.getSlider("Mineshaft Helper", TextScale), 0);
                         }
 
-                        ESPUtil.Esp(armorStand, 2, Color.white, 0.5f, Modules.getBool("Mineshaft Helper", Withline), false);
+                        ESPUtil.Esp(armorStand, 2, Color.white, 0.5f,
+                                Modules.getBool("Mineshaft Helper", Withline), false);
                     });
                 }
             }
